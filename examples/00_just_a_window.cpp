@@ -26,5 +26,10 @@ catch(...)
 {
 	if(errno)
 		std::puts(std::strerror(errno));
+
+	const char* sdl_error = SDL_GetError();
+	if(*sdl_error)
+		std::puts(sdl_error);
+
 	throw;
 }
