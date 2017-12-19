@@ -14,7 +14,7 @@ int main() try
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	{
-		Window win("Nomo", point2D(640, 480), WFlags::shown | WFlags::borderless);
+		Window win("Borderless window", point2D(640, 480), WFlags::borderless);
 		graphical::fill(win.surface(), win.surface().format().color(0x77, 0x00, 0xAA));
 		win.update();
 		SDL_Delay(1313);
