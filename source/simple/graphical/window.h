@@ -4,14 +4,14 @@
 #include <memory>
 #include <string>
 #include <SDL2/SDL.h>
-#include "simple/geom/vector.hpp"
+
+#include "common_def.h"
 #include "surface.h"
 #include "utils.hpp"
 
 namespace simple::graphical
 {
 
-	using point2D = geom::vector<int, 2>;
 	using sdl_window_wrapper = utils::sdl_object_wrapper<SDL_Window>;
 
 	class window : public sdl_window_wrapper

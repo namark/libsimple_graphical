@@ -5,8 +5,9 @@
 namespace simple::graphical
 {
 
-	surface::free_pixel_format::free_pixel_format(SDL_PixelFormat* guts)
-		: pixel_format(guts, support::nop)
+	surface::surface(const char* guts)
+		: sdl_surface_wrapper(SDL_LoadBMP(guts), SDL_FreeSurface),
+		_format(this->guts()->format)
 	{}
 
 	surface::surface(SDL_Surface* guts)
@@ -14,9 +15,18 @@ namespace simple::graphical
 		_format(this->guts()->format)
 	{}
 
+	surface::free_pixel_format::free_pixel_format(SDL_PixelFormat* guts)
+		: pixel_format(guts, support::nop)
+	{}
+
 	const pixel_format& surface::format() const
 	{
 		return _format;
+	}
+
+	point2D surface::size() const
+	{
+		return {guts()->w, guts()->h};
 	}
 
 } // namespace simple::graphical

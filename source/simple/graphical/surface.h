@@ -3,6 +3,8 @@
 
 #include <memory>
 #include <SDL2/SDL.h>
+
+#include "common_def.h"
 #include "pixel_format.h"
 #include "utils.hpp"
 
@@ -15,13 +17,14 @@ namespace simple::graphical
 	class surface : public sdl_surface_wrapper
 	{
 		public:
+		surface(const char* filename);
+
 		const pixel_format& format() const;
+		point2D size() const;
 
 		protected:
 
 		surface(SDL_Surface* guts);
-
-		friend bool fill(const surface& surf, color col);
 
 		private:
 
@@ -35,6 +38,8 @@ namespace simple::graphical
 
 		const free_pixel_format _format;
 
+		friend bool fill(const surface& surf, color col);
+		friend bool blit(const surface& source, const surface& destination, point2D position);
 	};
 
 } // namespace simple::graphical
