@@ -15,9 +15,12 @@ TARGETS	:= $(SOURCES:%.cpp=$(DISTDIR)/%)
 OBJECTS	:= $(SOURCES:%.cpp=$(TEMPDIR)/%.o)
 DEPENDS	:= $(OBJECTS:.o=.d)
 
-build: $(TARGETS)
+build: make_parent $(TARGETS)
 
-$(DISTDIR)/%: $(TEMPDIR)/%.o | $(DISTDIR)
+make_parent:
+	make -C ..
+
+$(DISTDIR)/%: $(TEMPDIR)/%.o ../out/libsimple_graphical.a | $(DISTDIR)
 	$(CXX) $(LDFLAGS) $< $(LDLIBS) -o $@
 
 $(TEMPDIR)/%.o: %.cpp | $(TEMPDIR)
@@ -43,4 +46,4 @@ distclean: clean
 -include $(DEPENDS)
 
 .PRECIOUS : $(OBJECTS)
-.PHONY : clean distclean
+.PHONY : clean distclean make_parent
