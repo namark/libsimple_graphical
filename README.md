@@ -4,3 +4,4 @@ A static library wrapping SDL2 to hopefully make it easier to work with(harder t
 ## Dependencies
 [libsimple_geom](https://github.com/namark/libsimple_geom)
 [libsimple_support](https://github.com/namark/libsimple_support)
+[libsdl2](https://libsdl.org)
