@@ -1,3 +1,5 @@
+#include <type_traits>
+
 #include "pixel_format.h"
 #include "color.h"
 
@@ -7,6 +9,24 @@ namespace simple::graphical
 	void pixel_format::free_pixel_format(const SDL_PixelFormat* one)
 	{
 		SDL_FreeFormat(const_cast<SDL_PixelFormat*>(one));
+	}
+
+	pixel_format::pixel_format(type format_type)
+		: sdl_pixel_format_wrapper
+		(
+			SDL_AllocFormat(static_cast<std::underlying_type_t<type>>(format_type)),
+			free_pixel_format
+		)
+	{}
+
+	int pixel_format::bits() const
+	{
+		return guts()->BitsPerPixel;
+	}
+
+	int pixel_format::bytes() const
+	{
+		return guts()->BytesPerPixel;
 	}
 
 	graphical::color pixel_format::color(uint8_t red, uint8_t green, uint8_t blue) const

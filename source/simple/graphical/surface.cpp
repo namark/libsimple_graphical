@@ -5,13 +5,13 @@
 namespace simple::graphical
 {
 
-	surface::surface(const char* guts)
-		: sdl_surface_wrapper(SDL_LoadBMP(guts), SDL_FreeSurface),
+	surface::surface(const char* filename)
+		: sdl_surface_wrapper(SDL_LoadBMP(filename), SDL_FreeSurface),
 		_format(this->guts()->format)
 	{}
 
-	surface::surface(SDL_Surface* guts)
-		: sdl_surface_wrapper(guts, support::nop),
+	surface::surface(SDL_Surface* guts, Deleter deleter)
+		: sdl_surface_wrapper(guts, deleter),
 		_format(this->guts()->format)
 	{}
 

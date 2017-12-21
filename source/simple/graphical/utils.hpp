@@ -33,6 +33,7 @@ namespace simple::graphical::utils
 	class sdl_object_wrapper
 	{
 
+		protected:
 		using Deleter = void(*)(SDL_Object*);
 		using object_ptr = std::unique_ptr<SDL_Object, Deleter>;
 

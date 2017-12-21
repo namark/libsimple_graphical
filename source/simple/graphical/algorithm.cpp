@@ -20,4 +20,9 @@ namespace simple::graphical
 			SDL_BlitSurface(source.guts().get(), NULL, destination.guts().get(), &dest_rect));
 	}
 
+	surface convert(const surface& source, const pixel_format& format)
+	{
+		return surface( SDL_ConvertSurface(source.guts().get(), format.guts().get(), 0) );
+	}
+
 } // namespace simple::graphical

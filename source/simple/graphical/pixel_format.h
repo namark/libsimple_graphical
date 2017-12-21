@@ -11,6 +11,7 @@ namespace simple::graphical
 	using sdl_pixel_format_wrapper = utils::sdl_object_wrapper<const SDL_PixelFormat>;
 
 	class color;
+	class surface;
 
 	class pixel_format : public sdl_pixel_format_wrapper
 	{
@@ -68,12 +69,18 @@ namespace simple::graphical
 
 		using sdl_pixel_format_wrapper::sdl_pixel_format_wrapper;
 
+		explicit pixel_format(type t);
+
+		int bits() const;
+		int bytes() const;
+
 		graphical::color color(uint8_t red, uint8_t green, uint8_t blue) const;
 		graphical::color color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) const;
 
 		private:
 		static void free_pixel_format(const SDL_PixelFormat* one);
 
+		friend surface convert(const surface& source, const pixel_format& format);
 	};
 
 } // namespace simple::graphical

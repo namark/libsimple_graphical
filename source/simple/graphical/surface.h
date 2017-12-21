@@ -17,14 +17,14 @@ namespace simple::graphical
 	class surface : public sdl_surface_wrapper
 	{
 		public:
-		surface(const char* filename);
+		explicit surface(const char* filename);
 
 		const pixel_format& format() const;
 		point2D size() const;
 
 		protected:
 
-		surface(SDL_Surface* guts);
+		explicit surface(SDL_Surface* guts, Deleter deleter = SDL_FreeSurface);
 
 		private:
 
@@ -36,10 +36,11 @@ namespace simple::graphical
 			free_pixel_format(SDL_PixelFormat* guts);
 		};
 
-		const free_pixel_format _format;
+		free_pixel_format _format;
 
 		friend bool fill(const surface& surf, color col);
 		friend bool blit(const surface& source, const surface& destination, point2D position);
+		friend surface convert(const surface& source, const pixel_format& format);
 	};
 
 } // namespace simple::graphical

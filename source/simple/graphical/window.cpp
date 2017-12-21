@@ -1,6 +1,7 @@
+#include <type_traits>
+
 #include "simple/support/function_utils.hpp"
 #include "window.h"
-#include "utils.hpp"
 
 namespace simple::graphical
 {
@@ -40,7 +41,7 @@ namespace simple::graphical
 	}
 
 	window::free_surface::free_surface(SDL_Surface * guts)
-		: surface(guts)
+		: surface(guts, support::nop)
 	{}
 
 } // namespace simple::graphical
