@@ -1,4 +1,3 @@
-#include <cstring>
 #include <cstdio>
 
 #include "simple/graphical/window.h"
@@ -25,7 +24,7 @@ int main() try
 catch(...)
 {
 	if(errno)
-		std::puts(std::strerror(errno));
+		std::perror("ERROR");
 
 	const char* sdl_error = SDL_GetError();
 	if(*sdl_error)

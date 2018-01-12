@@ -1,4 +1,3 @@
-#include <cstring>
 #include <cstdio>
 #include <random>
 
@@ -18,7 +17,7 @@ int main(int argc, char const* argv[]) try
 {
 	if(argc < 2)
 	{
-		puts("Image not specified.");
+		std::puts("Image not specified.");
 		return -1;
 	}
 
@@ -43,7 +42,7 @@ int main(int argc, char const* argv[]) try
 catch(...)
 {
 	if(errno)
-		std::puts(std::strerror(errno));
+		std::perror("ERROR");
 
 	const char* sdl_error = SDL_GetError();
 	if(*sdl_error)
