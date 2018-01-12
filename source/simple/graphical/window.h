@@ -5,6 +5,8 @@
 #include <string>
 #include <SDL2/SDL.h>
 
+#include "simple/support/enum_flags_operators.hpp"
+
 #include "common_def.h"
 #include "surface.h"
 #include "utils.hpp"
@@ -54,6 +56,7 @@ namespace simple::graphical
 		};
 
 		constexpr static const point2D undefined_position = point2D::one() * SDL_WINDOWPOS_UNDEFINED;
+		constexpr static const point2D center_position = point2D::one() * SDL_WINDOWPOS_CENTERED;
 
 		window
 		(
@@ -82,10 +85,14 @@ namespace simple::graphical
 
 	};
 
-	window::flags operator | (const window::flags& one, const window::flags& other);
-	window::flags operator & (const window::flags& one, const window::flags& other);
+	using ::operator |;
+	using ::operator &;
+	using ::operator &&;
 
 } // namespace simple::graphical
+
+template<> struct simple::support::define_enum_flags_operators<simple::graphical::window::flags>
+	: std::true_type {};
 
 #endif /* end of include guard */
 

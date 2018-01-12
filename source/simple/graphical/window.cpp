@@ -8,18 +8,6 @@ namespace simple::graphical
 
 	using flags = window::flags;
 
-	flags operator | (const flags& one, const flags& other)
-	{
-		using UType = std::underlying_type_t<flags>;
-		return static_cast<flags>(static_cast<UType>(one) | static_cast<UType>(other));
-	}
-
-	flags operator & (const flags& one, const flags& other)
-	{
-		using UType = std::underlying_type_t<flags>;
-		return static_cast<flags>(static_cast<UType>(one) & static_cast<UType>(other));
-	}
-
 	window::window(std::string title, point2D size, flags options, point2D position)
 		: sdl_window_wrapper
 		(
