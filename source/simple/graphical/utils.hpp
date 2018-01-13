@@ -7,6 +7,9 @@
 #include <utility>
 #include <SDL2/SDL.h>
 
+#include "simple/support/range.hpp"
+#include "simple/geom/vector.hpp"
+
 namespace simple::graphical::utils
 {
 
@@ -54,6 +57,21 @@ namespace simple::graphical::utils
 		}
 
 	};
+
+	template <typename Rect>
+	using sdl_rect_range_t = support::range<geom::vector<decltype(std::declval<Rect>().x), 2>>;
+
+	template <typename Rect>
+	inline Rect to_sdl_rect(const sdl_rect_range_t<Rect>& r) noexcept
+	{
+		Rect rect;
+		rect.x = r.lower().x();
+		rect.y = r.lower().y();
+		auto size = r.upper() - r.lower();
+		rect.w = size.x();
+		rect.h = size.y();
+		return rect;
+	}
 
 } // namespace simple::graphical::utils
 

@@ -38,8 +38,9 @@ namespace simple::graphical
 
 		free_pixel_format _format;
 
-		friend bool fill(const surface& surf, color col);
-		friend bool blit(const surface& source, const surface& destination, point2D position);
+		friend bool fill(const surface&, color);
+		friend bool blit(const surface&, range2D, const surface&, point2D);
+		friend bool blit(const surface&, range2D, const surface&, range2D);
 		friend surface convert(const surface& source, const pixel_format& format);
 	};
 

@@ -13,11 +13,28 @@ namespace simple::graphical
 
 	bool blit(const surface& source, const surface& destination, point2D position)
 	{
-		SDL_Rect dest_rect;
-		dest_rect.x = position.x();
-		dest_rect.y = position.y();
+		return blit(source, rect{ source.size() }, destination, position);
+	}
+
+	bool blit(const surface& source, range2D src_range, const surface& destination, point2D position)
+	{
+		auto sr = utils::to_sdl_rect<SDL_Rect>(src_range);
+		auto dr = utils::to_sdl_rect<SDL_Rect>({position});
 		return utils::check_sdl_error(
-			SDL_BlitSurface(source.guts().get(), NULL, destination.guts().get(), &dest_rect));
+			SDL_BlitSurface(source.guts().get(), &sr, destination.guts().get(), &dr));
+	}
+
+	bool blit(const surface& source, const surface& destination, range2D dest_range)
+	{
+		return blit(source, rect{ source.size() }, destination, dest_range);
+	}
+
+	bool blit(const surface& source, range2D src_range, const surface& destination, range2D dest_range)
+	{
+		auto sr = utils::to_sdl_rect<SDL_Rect>(src_range);
+		auto dr = utils::to_sdl_rect<SDL_Rect>(dest_range);
+		return utils::check_sdl_error(
+			SDL_BlitScaled(source.guts().get(), &sr, destination.guts().get(), &dr));
 	}
 
 	surface convert(const surface& source, const pixel_format& format)

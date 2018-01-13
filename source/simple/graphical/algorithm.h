@@ -12,6 +12,12 @@ namespace simple::graphical
 
 	bool blit(const surface& source, const surface& destination, point2D position = point2D::zero());
 
+	bool blit(const surface& source, range2D src_range, const surface& destination, point2D position = point2D::zero());
+
+	bool blit(const surface& source, const surface& destination, range2D dest_range);
+
+	bool blit(const surface& source, range2D src_range, const surface& destination, range2D dest_range);
+
 	surface convert(const surface& source, const pixel_format& format);
 
 } // namespace simple::graphical
