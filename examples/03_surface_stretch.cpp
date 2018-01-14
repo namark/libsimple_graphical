@@ -1,5 +1,4 @@
 #include <cstdio>
-#include <random>
 
 #include "simple/graphical/window.h"
 #include "simple/graphical/algorithm.h"
@@ -23,7 +22,7 @@ int main(int argc, char const* argv[]) try
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 	{
-		window win("Mess", size, window::flags::borderless);
+		window win("Stretchy", size, window::flags::borderless);
 		surface image(argv[1]);
 
 		// blit will stretch if a destination rectangle is specified
