@@ -73,6 +73,10 @@ namespace simple::graphical
 
 		int bits() const;
 		int bytes() const;
+		std::uint32_t red_mask() const;
+		std::uint32_t green_mask() const;
+		std::uint32_t blue_mask() const;
+		std::uint32_t alpha_mask() const;
 
 		graphical::color color(uint8_t red, uint8_t green, uint8_t blue) const;
 		graphical::color color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) const;

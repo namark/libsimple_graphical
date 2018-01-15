@@ -19,15 +19,13 @@ namespace simple::graphical
 		)
 	{}
 
-	int pixel_format::bits() const
-	{
-		return guts()->BitsPerPixel;
-	}
+	int pixel_format::bits() const { return guts()->BitsPerPixel; }
+	int pixel_format::bytes() const { return guts()->BytesPerPixel; }
 
-	int pixel_format::bytes() const
-	{
-		return guts()->BytesPerPixel;
-	}
+	std::uint32_t pixel_format::red_mask() const { return guts()->Rmask; }
+	std::uint32_t pixel_format::green_mask() const { return guts()->Gmask; }
+	std::uint32_t pixel_format::blue_mask() const { return guts()->Bmask; }
+	std::uint32_t pixel_format::alpha_mask() const { return guts()->Amask; }
 
 	graphical::color pixel_format::color(uint8_t red, uint8_t green, uint8_t blue) const
 	{
