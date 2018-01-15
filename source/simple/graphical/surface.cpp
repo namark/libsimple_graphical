@@ -10,6 +10,88 @@ namespace simple::graphical
 		_format(this->guts()->format)
 	{}
 
+	surface::surface(point2D size, const pixel_format& format)
+	: sdl_surface_wrapper
+	(
+		SDL_CreateRGBSurface
+		(
+			0,
+			size.x(), size.y(),
+			format.bits(),
+			format.red_mask(), format.green_mask(), format.blue_mask(), format.alpha_mask()
+		),
+		SDL_FreeSurface
+	),
+	_format(this->guts()->format)
+	{}
+
+#if SDL_VERSION_ATLEAST(2,0,5)
+	surface::surface(point2D size, pixel_format::type format)
+	: sdl_surface_wrapper
+	(
+		SDL_CreateRGBSurfaceWithFormat
+		(
+			0,
+			size.x(), size.y(),
+			0,
+			static_cast<std::underlying_type_t<pixel_format::type>>(format)
+		),
+		SDL_FreeSurface
+	),
+	_format(this->guts()->format)
+	{}
+#endif
+
+	surface::surface(byte* pixels, point2D size, const pixel_format& format)
+	: sdl_surface_wrapper
+	(
+		SDL_CreateRGBSurfaceFrom
+		(
+			pixels,
+			size.x(), size.y(),
+			format.bits(),
+			format.bytes() * size.x(),
+			format.red_mask(), format.green_mask(), format.blue_mask(), format.alpha_mask()
+		),
+		SDL_FreeSurface
+	),
+	_format(this->guts()->format)
+	{}
+
+	surface::surface(std::unique_ptr<byte[]> pixels, point2D size, const pixel_format& format)
+	: sdl_surface_wrapper
+	(
+		SDL_CreateRGBSurfaceFrom
+		(
+			pixels.get(),
+			size.x(), size.y(),
+			format.bits(),
+			format.bytes() * size.x(),
+			format.red_mask(), format.green_mask(), format.blue_mask(), format.alpha_mask()
+		),
+		SDL_FreeSurface
+	),
+	_format(this->guts()->format),
+	pixels_owner(pixels.release(), [](byte* x){ delete [] x; })
+	{}
+
+	surface::surface(std::unique_ptr<byte[], void(*)(byte*)> pixels, point2D size, const pixel_format& format)
+	: sdl_surface_wrapper
+	(
+		SDL_CreateRGBSurfaceFrom
+		(
+			pixels.get(),
+			size.x(), size.y(),
+			format.bits(),
+			format.bytes() * size.x(),
+			format.red_mask(), format.green_mask(), format.blue_mask(), format.alpha_mask()
+		),
+		SDL_FreeSurface
+	),
+	_format(this->guts()->format),
+	pixels_owner(std::move(pixels))
+	{}
+
 	surface::surface(SDL_Surface* guts, Deleter deleter)
 		: sdl_surface_wrapper(guts, deleter),
 		_format(this->guts()->format)

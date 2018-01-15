@@ -4,6 +4,8 @@
 #include <memory>
 #include <SDL2/SDL.h>
 
+#include "simple/support/function_utils.hpp"
+
 #include "common_def.h"
 #include "pixel_format.h"
 #include "utils.hpp"
@@ -16,8 +18,19 @@ namespace simple::graphical
 
 	class surface : public sdl_surface_wrapper
 	{
+
 		public:
+
+		using byte = unsigned char;
+
 		explicit surface(const char* filename);
+		surface(point2D size, const pixel_format& format);
+#if SDL_VERSION_ATLEAST(2,0,5)
+		surface(point2D size, pixel_format::type format);
+#endif
+		surface(byte* pixels, point2D size, const pixel_format& format);
+		surface(std::unique_ptr<byte[]> pixels, point2D size, const pixel_format& format);
+		surface(std::unique_ptr<byte[], void(*)(byte[])> pixels, point2D size, const pixel_format& format);
 
 		const pixel_format& format() const;
 		point2D size() const;
@@ -37,6 +50,7 @@ namespace simple::graphical
 		};
 
 		free_pixel_format _format;
+		std::unique_ptr<byte[], void(*)(byte*)> pixels_owner {nullptr, support::nop};
 
 		friend bool fill(const surface&, color);
 		friend bool blit(const surface&, range2D, const surface&, point2D);
