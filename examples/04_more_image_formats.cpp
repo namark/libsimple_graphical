@@ -6,7 +6,6 @@
 
 #include "simple/graphical/window.h"
 #include "simple/graphical/algorithm.h"
-#include "simple/support/misc.hpp"
 
 #include "external/file.hpp"
 #include "external/picopng.h"
@@ -14,7 +13,6 @@
 #include "external/stb_image.h"
 
 using namespace simple::graphical;
-using simple::support::ston;
 
 // stb adapter
 surface stb_load_surface(const char* filename);
