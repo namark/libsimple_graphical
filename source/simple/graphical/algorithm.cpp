@@ -11,6 +11,13 @@ namespace simple::graphical
 			SDL_FillRect(surf.guts().get(), NULL, static_cast<uint32_t>(col)));
 	}
 
+	bool fill(const surface& surf, color col, range2D area)
+	{
+		auto r = utils::to_sdl_rect<SDL_Rect>(area);
+		return utils::check_sdl_error(
+			SDL_FillRect(surf.guts().get(), &r, static_cast<uint32_t>(col)));
+	}
+
 	bool blit(const surface& source, const surface& destination, point2D position)
 	{
 		return blit(source, rect{ source.size() }, destination, position);
