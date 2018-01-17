@@ -10,6 +10,19 @@ namespace simple::graphical
 		_format(this->guts()->format)
 	{}
 
+	surface::surface(const surface& other)
+	: sdl_surface_wrapper
+	(
+#if SDL_VERSION_ATLEAST(2,0,6)
+	 	SDL_DuplicateSurface(other.guts().get());
+#else
+		SDL_ConvertSurface(other.guts().get(), other.guts()->format, other.guts()->flags),
+#endif
+		SDL_FreeSurface
+	),
+	_format(this->guts()->format)
+	{}
+
 	surface::surface(point2D size, const pixel_format& format)
 	: sdl_surface_wrapper
 	(

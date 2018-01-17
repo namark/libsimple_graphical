@@ -23,6 +23,10 @@ namespace simple::graphical
 
 		using byte = unsigned char;
 
+		explicit surface(const surface& other);
+		surface(surface&& other) = default;
+		surface& operator=(surface&& other) = default;
+
 		explicit surface(const char* filename);
 		surface(point2D size, const pixel_format& format);
 #if SDL_VERSION_ATLEAST(2,0,5)
