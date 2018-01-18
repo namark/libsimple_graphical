@@ -80,6 +80,8 @@ namespace simple::graphical
 
 		graphical::color color(uint8_t red, uint8_t green, uint8_t blue) const;
 		graphical::color color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) const;
+		graphical::color color(uint8_t gray) const;
+		graphical::color color(uint8_t gray, uint8_t alpha) const;
 
 		private:
 		static void free_pixel_format(const SDL_PixelFormat* one);

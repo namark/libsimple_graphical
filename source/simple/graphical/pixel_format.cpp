@@ -37,4 +37,10 @@ namespace simple::graphical
 		return graphical::color(SDL_MapRGBA(guts().get(), red, green, blue, alpha));
 	}
 
+	graphical::color pixel_format::color(uint8_t gray) const
+	{ return color(gray, gray, gray); }
+
+	graphical::color pixel_format::color(uint8_t gray, uint8_t alpha) const
+	{ return color(gray, gray, gray, alpha); }
+
 } // namespace simple::graphical
