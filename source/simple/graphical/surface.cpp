@@ -124,4 +124,9 @@ namespace simple::graphical
 		return {guts()->w, guts()->h};
 	}
 
+	void surface::save(const char* filename) const
+	{
+		utils::throw_sdl_error(SDL_SaveBMP(guts().get(), filename));
+	}
+
 } // namespace simple::graphical

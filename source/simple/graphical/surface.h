@@ -39,6 +39,8 @@ namespace simple::graphical
 		const pixel_format& format() const;
 		point2D size() const;
 
+		void save(const char* filename) const;
+
 		protected:
 
 		explicit surface(SDL_Surface* guts, Deleter deleter = SDL_FreeSurface);
