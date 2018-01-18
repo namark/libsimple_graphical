@@ -3,10 +3,10 @@
 #include "simple/graphical/window.h"
 #include "simple/graphical/algorithm.h"
 
+#include "common.h"
+
 using namespace simple::graphical;
 constexpr auto half2D = vector2D::one() * 0.5f;
-
-void checker_up(const surface& board, point2D tile_size, color tile_color);
 
 int main() try
 {
@@ -20,6 +20,7 @@ int main() try
 		auto bright = win.surface().format().color(160,160,160);
 
 		fill(win.surface(), dark);
+		// draws a checker pattern (see common.h)
 		checker_up(win.surface(), point2D::one() * 10, bright);
 
 		win.update();
@@ -32,15 +33,14 @@ int main() try
 		// fill on surface does not blend, it overwrites
 		fill(alpha_layer, light_blue, anchored_rect{ {100, 300}, center, half2D } );
 		fill(alpha_layer, light_pink, anchored_rect{ {300, 100}, center, half2D } );
-		// blit blends
-		blit(alpha_layer, win.surface());
+		blit(alpha_layer, win.surface()); // blit blends
 
 		win.update();
 		SDL_Delay(1313);
 
 		surface alpha_layer2(alpha_layer.size(), alpha_layer.format());
 
-		// so these will appear blended, with the previous two
+		// so these will be blended with the previous two
 		fill(alpha_layer2, light_blue, anchored_rect{ {150, 150}, center + 75, half2D } );
 		fill(alpha_layer2, light_pink, anchored_rect{ {150, 150}, center - 75, half2D } );
 		blit(alpha_layer2, win.surface()); // thanks to this blit
@@ -62,27 +62,4 @@ catch(...)
 		std::puts(sdl_error);
 
 	throw;
-}
-
-void checker_up(const surface& board, point2D tile_size, color tile_color)
-{
-	using simple::support::intersects;
-
-	rect board_rect{board.size()};
-	rect tile = rect{tile_size};
-	while( intersects<point2D>(board_rect, tile) )
-	{
-		fill(board, tile_color, tile);
-
-		for(size_t i = 0; i < point2D::dimensions; ++i)
-		{
-			auto step = tile.size * 2 * point2D::unit(i);
-			auto t = tile;
-			while( t.position += step, intersects<point2D>(board_rect, t) )
-				fill(board, tile_color, t);
-		}
-
-		tile.position += tile.size;
-	}
-
 }
