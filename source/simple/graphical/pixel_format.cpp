@@ -1,7 +1,6 @@
 #include <type_traits>
 
 #include "pixel_format.h"
-#include "color.h"
 
 namespace simple::graphical
 {
@@ -27,20 +26,14 @@ namespace simple::graphical
 	std::uint32_t pixel_format::blue_mask() const { return guts()->Bmask; }
 	std::uint32_t pixel_format::alpha_mask() const { return guts()->Amask; }
 
-	graphical::color pixel_format::color(uint8_t red, uint8_t green, uint8_t blue) const
+	graphical::color pixel_format::color(const rgb_pixel& values) const
 	{
-		return graphical::color(SDL_MapRGB(guts().get(), red, green, blue));
+		return graphical::color(SDL_MapRGB(guts().get(), values.r(), values.g(), values.b()));
 	}
 
-	graphical::color pixel_format::color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) const
+	graphical::color pixel_format::color(const rgba_pixel& values) const
 	{
-		return graphical::color(SDL_MapRGBA(guts().get(), red, green, blue, alpha));
+		return graphical::color(SDL_MapRGBA(guts().get(), values.r(), values.g(), values.b(), values.a()));
 	}
-
-	graphical::color pixel_format::color(uint8_t gray) const
-	{ return color(gray, gray, gray); }
-
-	graphical::color pixel_format::color(uint8_t gray, uint8_t alpha) const
-	{ return color(gray, gray, gray, alpha); }
 
 } // namespace simple::graphical

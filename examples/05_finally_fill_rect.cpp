@@ -6,6 +6,8 @@
 #include "common.h"
 
 using namespace simple::graphical;
+using namespace simple::support::literals;
+
 constexpr auto half2D = vector2D::one() * 0.5f;
 
 int main() try
@@ -16,8 +18,8 @@ int main() try
 		window win("Look at rects", {640, 480}, window::flags::borderless);
 		auto center = win.surface().size() / 2;
 
-		auto dark = win.surface().format().color(80,80,80);
-		auto bright = win.surface().format().color(160,160,160);
+		auto dark = win.surface().format().color({80_u8,80_u8,80_u8});
+		auto bright = win.surface().format().color({160_u8,160_u8,160_u8});
 
 		fill(win.surface(), dark);
 		// draws a checker pattern (see common.h)
@@ -27,8 +29,8 @@ int main() try
 		SDL_Delay(1313);
 
 		surface alpha_layer(win.surface().size(), pixel_format(pixel_format::type::rgba8888));
-		auto light_blue = alpha_layer.format().color(0, 177, 177, 177);
-		auto light_pink = alpha_layer.format().color(177, 0, 177, 177);
+		auto light_blue = alpha_layer.format().color({0_u8, 177_u8, 177_u8, 177_u8});
+		auto light_pink = alpha_layer.format().color({177_u8, 0_u8, 177_u8, 177_u8});
 
 		// fill on surface does not blend, it overwrites
 		fill(alpha_layer, light_blue, anchored_rect{ {100, 300}, center, half2D } );

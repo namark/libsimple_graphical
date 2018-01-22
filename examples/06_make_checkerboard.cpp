@@ -6,6 +6,7 @@
 #include "common.h"
 
 using namespace simple::graphical;
+using namespace simple::support::literals;
 using simple::support::ston;
 
 int main(int argc, char const* argv[]) try
@@ -28,8 +29,8 @@ int main(int argc, char const* argv[]) try
 	SDL_Init(SDL_INIT_EVERYTHING);
 	{
 		surface board (tile_size * board_dimensions, pixel_format(pixel_format::type::rgb24));
-		fill(board, board.format().color(255));
-		checker_up(board, tile_size, board.format().color(0));
+		fill(board, board.format().color(rgb_pixel::gray(255_u8)));
+		checker_up(board, tile_size, board.format().color(rgb_pixel::gray(0_u8)));
 		board.save(argv[5]);
 	}
 	SDL_Quit();

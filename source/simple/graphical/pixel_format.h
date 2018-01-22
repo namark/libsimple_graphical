@@ -4,13 +4,13 @@
 #include <memory>
 #include <SDL2/SDL.h>
 #include "utils.hpp"
+#include "color.h"
 
 namespace simple::graphical
 {
 
 	using sdl_pixel_format_wrapper = utils::sdl_object_wrapper<const SDL_PixelFormat>;
 
-	class color;
 	class surface;
 
 	class pixel_format : public sdl_pixel_format_wrapper
@@ -78,10 +78,8 @@ namespace simple::graphical
 		std::uint32_t blue_mask() const;
 		std::uint32_t alpha_mask() const;
 
-		graphical::color color(uint8_t red, uint8_t green, uint8_t blue) const;
-		graphical::color color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) const;
-		graphical::color color(uint8_t gray) const;
-		graphical::color color(uint8_t gray, uint8_t alpha) const;
+		graphical::color color(const rgb_pixel& values) const;
+		graphical::color color(const rgba_pixel& values) const;
 
 		private:
 		static void free_pixel_format(const SDL_PixelFormat* one);
