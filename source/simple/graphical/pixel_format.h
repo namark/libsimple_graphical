@@ -2,9 +2,11 @@
 #define SIMPLE_GRAPHICAL_PIXEL_FORMAT_H
 
 #include <memory>
+#include <optional>
 #include <SDL2/SDL.h>
 #include "utils.hpp"
 #include "color.h"
+#include "palette_view.h"
 
 namespace simple::graphical
 {
@@ -73,13 +75,15 @@ namespace simple::graphical
 
 		int bits() const;
 		int bytes() const;
-		std::uint32_t red_mask() const;
-		std::uint32_t green_mask() const;
-		std::uint32_t blue_mask() const;
-		std::uint32_t alpha_mask() const;
+		uint32_t red_mask() const;
+		uint32_t green_mask() const;
+		uint32_t blue_mask() const;
+		uint32_t alpha_mask() const;
 
 		graphical::color color(const rgb_pixel& values) const;
 		graphical::color color(const rgba_pixel& values) const;
+
+		std::optional<palette_view> palette() const;
 
 		private:
 		static void free_pixel_format(const SDL_PixelFormat* one);
