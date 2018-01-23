@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <array>
 
 #include "simple/graphical/algorithm.h"
 #include "simple/support/misc.hpp"
@@ -8,6 +9,18 @@
 using namespace simple::graphical;
 using namespace simple::support::literals;
 using simple::support::ston;
+
+enum ColorIndex
+{
+	Black,
+	White
+};
+
+constexpr auto colors = std::array
+{
+	rgba_pixel::gray(0_u8),
+	rgba_pixel::gray(255_u8)
+};
 
 int main(int argc, char const* argv[]) try
 {
@@ -28,9 +41,12 @@ int main(int argc, char const* argv[]) try
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 	{
-		surface board (tile_size * board_dimensions, pixel_format(pixel_format::type::rgb24));
-		fill(board, board.format().color(rgb_pixel::gray(255_u8)));
-		checker_up(board, tile_size, board.format().color(rgb_pixel::gray(0_u8)));
+		surface board (tile_size * board_dimensions, pixel_format(pixel_format::type::index8));
+		auto palette = board.format().palette();
+		if(palette)
+			palette->setColors(colors);
+		fill(board, color(White));
+		checker_up(board, tile_size, color(Black));
 		board.save(argv[5]);
 	}
 	SDL_Quit();
