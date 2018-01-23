@@ -1,6 +1,9 @@
 #include "simple/support/function_utils.hpp"
+#include "simple/support/enum.hpp"
 #include "surface.h"
 #include "utils.hpp"
+
+using simple::support::to_integer;
 
 namespace simple::graphical
 {
@@ -38,24 +41,7 @@ namespace simple::graphical
 	_format(this->guts()->format)
 	{}
 
-#if SDL_VERSION_ATLEAST(2,0,5)
-	surface::surface(point2D size, pixel_format::type format)
-	: sdl_surface_wrapper
-	(
-		SDL_CreateRGBSurfaceWithFormat
-		(
-			0,
-			size.x(), size.y(),
-			0,
-			static_cast<std::underlying_type_t<pixel_format::type>>(format)
-		),
-		SDL_FreeSurface
-	),
-	_format(this->guts()->format)
-	{}
-#endif
-
-	surface::surface(byte* pixels, point2D size, const pixel_format& format)
+	surface::surface(byte* pixels, point2D size, const pixel_format& format, int pitch)
 	: sdl_surface_wrapper
 	(
 		SDL_CreateRGBSurfaceFrom
@@ -63,7 +49,7 @@ namespace simple::graphical
 			pixels,
 			size.x(), size.y(),
 			format.bits(),
-			format.bytes() * size.x(),
+			pitch ? pitch : format.bytes() * size.x(),
 			format.red_mask(), format.green_mask(), format.blue_mask(), format.alpha_mask()
 		),
 		SDL_FreeSurface
@@ -71,7 +57,7 @@ namespace simple::graphical
 	_format(this->guts()->format)
 	{}
 
-	surface::surface(std::unique_ptr<byte[]> pixels, point2D size, const pixel_format& format)
+	surface::surface(std::unique_ptr<byte[]> pixels, point2D size, const pixel_format& format, int pitch)
 	: sdl_surface_wrapper
 	(
 		SDL_CreateRGBSurfaceFrom
@@ -79,7 +65,7 @@ namespace simple::graphical
 			pixels.get(),
 			size.x(), size.y(),
 			format.bits(),
-			format.bytes() * size.x(),
+			pitch ? pitch : format.bytes() * size.x(),
 			format.red_mask(), format.green_mask(), format.blue_mask(), format.alpha_mask()
 		),
 		SDL_FreeSurface
@@ -88,7 +74,7 @@ namespace simple::graphical
 	pixels_owner(pixels.release(), [](byte* x){ delete [] x; })
 	{}
 
-	surface::surface(std::unique_ptr<byte[], void(*)(byte*)> pixels, point2D size, const pixel_format& format)
+	surface::surface(std::unique_ptr<byte[], void(*)(byte*)> pixels, point2D size, const pixel_format& format, int pitch)
 	: sdl_surface_wrapper
 	(
 		SDL_CreateRGBSurfaceFrom
@@ -96,7 +82,7 @@ namespace simple::graphical
 			pixels.get(),
 			size.x(), size.y(),
 			format.bits(),
-			format.bytes() * size.x(),
+			pitch ? pitch : format.bytes() * size.x(),
 			format.red_mask(), format.green_mask(), format.blue_mask(), format.alpha_mask()
 		),
 		SDL_FreeSurface
@@ -104,6 +90,75 @@ namespace simple::graphical
 	_format(this->guts()->format),
 	pixels_owner(std::move(pixels))
 	{}
+
+#if SDL_VERSION_ATLEAST(2,0,5)
+
+	surface::surface(point2D size, pixel_format::type format)
+	: sdl_surface_wrapper
+	(
+		SDL_CreateRGBSurfaceWithFormat
+		(
+			0,
+			size.x(), size.y(),
+			0,
+			to_integer(format)
+		),
+		SDL_FreeSurface
+	),
+	_format(this->guts()->format)
+	{}
+
+	surface::surface(byte* pixels, point2D size, pixel_format::type format, int pitch)
+	: sdl_surface_wrapper
+	(
+		SDL_CreateRGBSurfaceWithFormatFrom
+		(
+			pixels,
+			size.x(), size.y(),
+			0,
+			pitch ? pitch : SDL_BYTESPERPIXEL(to_integer(format)) * size.x(),
+			to_integer(format)
+		),
+		SDL_FreeSurface
+	),
+	_format(this->guts()->format)
+	{}
+
+	surface::surface(std::unique_ptr<byte[]> pixels, point2D size, pixel_format::type format, int pitch)
+	: sdl_surface_wrapper
+	(
+		SDL_CreateRGBSurfaceWithFormatFrom
+		(
+			pixels.get(),
+			size.x(), size.y(),
+			format.bits(),
+			pitch ? pitch : SDL_BYTESPERPIXEL(to_integer(format)) * size.x(),
+			to_integer(format);
+		),
+		SDL_FreeSurface
+	),
+	_format(this->guts()->format),
+	pixels_owner(pixels.release(), [](byte* x){ delete [] x; })
+	{}
+
+	surface::surface(std::unique_ptr<byte[], void(*)(byte*)> pixels, point2D size, const pixel_format& format, int pitch)
+	: sdl_surface_wrapper
+	(
+		SDL_CreateRGBSurfaceWithFormatFrom
+		(
+			pixels.get(),
+			size.x(), size.y(),
+			format.bits(),
+			pitch ? pitch : SDL_BYTESPERPIXEL(to_integer(format)) * size.x(),
+			to_integer(format)
+		),
+		SDL_FreeSurface
+	),
+	_format(this->guts()->format),
+	pixels_owner(std::move(pixels))
+	{}
+
+#endif
 
 	surface::surface(SDL_Surface* guts, Deleter deleter)
 		: sdl_surface_wrapper(guts, deleter),

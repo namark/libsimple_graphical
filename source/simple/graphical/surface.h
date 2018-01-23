@@ -29,12 +29,15 @@ namespace simple::graphical
 
 		explicit surface(const char* filename);
 		surface(point2D size, const pixel_format& format);
+		surface(byte* pixels, point2D size, const pixel_format& format, int pitch = 0);
+		surface(std::unique_ptr<byte[]> pixels, point2D size, const pixel_format& format, int pitch = 0);
+		surface(std::unique_ptr<byte[], void(*)(byte[])> pixels, point2D size, const pixel_format& format, int pitch = 0);
 #if SDL_VERSION_ATLEAST(2,0,5)
 		surface(point2D size, pixel_format::type format);
+		surface(byte* pixels, point2D size, pixel_format::type format);
+		surface(std::unique_ptr<byte[]> pixels, point2D size, pixel_format::type format);
+		surface(std::unique_ptr<byte[], void(*)(byte[])> pixels, point2D size, pixel_format::type format);
 #endif
-		surface(byte* pixels, point2D size, const pixel_format& format);
-		surface(std::unique_ptr<byte[]> pixels, point2D size, const pixel_format& format);
-		surface(std::unique_ptr<byte[], void(*)(byte[])> pixels, point2D size, const pixel_format& format);
 
 		const pixel_format& format() const;
 		point2D size() const;
