@@ -14,9 +14,21 @@ namespace simple::graphical
 	struct color_vector : public geom::vector<Type, Size>
 	{
 		using base = geom::vector<Type, Size>;
-		using base::base;
 		using int_type = uint32_t;
-		constexpr static auto value_limits = support::range<Type>::limit();
+		constexpr static auto value_limits()
+		{
+			if constexpr(std::is_floating_point_v<Type>)
+				return support::range<Type>{static_cast<Type>(0), static_cast<Type>(1)};
+			else
+				return support::range<Type>::limit();
+		}
+
+		using base::base;
+
+		template<size_t S = Size, std::enable_if_t<S == 4>* = nullptr>
+		color_vector(const color_vector<Type, 3>& other)
+		: color_vector(other.r(), other.g(), other.b(), value_limits().upper())
+		{}
 
 		constexpr Type& r() { return this->x(); }
 		constexpr Type& g() { return this->y(); }
@@ -37,7 +49,7 @@ namespace simple::graphical
 
 		template<typename T = Type, size_t S = Size,
 			std::enable_if_t<S == 4 && std::is_same_v<Type, T>>* = nullptr>
-		constexpr static color_vector gray(T value, T alpha = value_limits.upper())
+		constexpr static color_vector gray(T value, T alpha = value_limits().upper())
 		{
 			return {value, value, value, alpha};
 		}
