@@ -1,6 +1,6 @@
 #include <cstdio>
 
-#include "simple/graphical/window.h"
+#include "simple/graphical/software_window.h"
 #include "simple/graphical/algorithm.h"
 
 #include "common.h"
@@ -15,7 +15,7 @@ int main() try
 
 	SDL_Init(SDL_INIT_EVERYTHING);
 	{
-		window win("Look at rects", {640, 480}, window::flags::borderless);
+		software_window win("Look at rects", {640, 480}, window::flags::borderless);
 		auto center = win.surface().size() / 2;
 
 		auto dark = win.surface().format().color({80_u8,80_u8,80_u8});

@@ -1,13 +1,13 @@
 #include <cstdio>
 
-#include "simple/graphical/window.h"
+#include "simple/graphical/software_window.h"
 #include "simple/graphical/algorithm.h"
 
 using namespace simple;
 using namespace graphical::color_literals;
 
 using point2D = graphical::point2D;
-using Window = graphical::window;
+using Window = graphical::software_window;
 using WFlags = Window::flags;
 
 int main() try

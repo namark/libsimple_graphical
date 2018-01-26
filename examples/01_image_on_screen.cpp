@@ -1,6 +1,6 @@
 #include <cstdio>
 
-#include "simple/graphical/window.h"
+#include "simple/graphical/software_window.h"
 #include "simple/graphical/algorithm.h"
 
 using namespace simple::graphical;
@@ -16,7 +16,7 @@ int main(int argc, char const* argv[]) try
 	SDL_Init(SDL_INIT_EVERYTHING);
 	{
 		surface image(argv[1]);
-		window win("Image", image.size(), window::flags::borderless);
+		software_window win("Image", image.size(), window::flags::borderless);
 		blit(image, win.surface());
 		win.update();
 		SDL_Delay(1313);

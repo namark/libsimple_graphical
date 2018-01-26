@@ -8,7 +8,6 @@
 #include "simple/support/enum_flags_operators.hpp"
 
 #include "common_def.h"
-#include "surface.h"
 #include "utils.hpp"
 
 namespace simple::graphical
@@ -58,6 +57,8 @@ namespace simple::graphical
 		constexpr static const point2D undefined_position = point2D::one() * SDL_WINDOWPOS_UNDEFINED;
 		constexpr static const point2D center_position = point2D::one() * SDL_WINDOWPOS_CENTERED;
 
+		protected:
+
 		window
 		(
 			std::string title,
@@ -65,23 +66,6 @@ namespace simple::graphical
 			flags windowflags = flags::shown,
 			point2D position = undefined_position
 		);
-
-		const graphical::surface & surface() const;
-
-		void update()
-		{
-			utils::throw_sdl_error(SDL_UpdateWindowSurface(guts().get()));
-		}
-
-		private:
-
-		class free_surface : public graphical::surface
-		{
-			public:
-			free_surface(SDL_Surface* guts);
-		};
-
-		const free_surface _surface;
 
 	};
 

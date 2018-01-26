@@ -4,7 +4,7 @@
 #include <optional>
 #include <functional>
 
-#include "simple/graphical/window.h"
+#include "simple/graphical/software_window.h"
 #include "simple/graphical/algorithm.h"
 
 #include "external/file.hpp"
@@ -143,7 +143,7 @@ auto picopng_load_image(const char* filename)
 
 void show_image(const surface& image)
 {
-	window win("Image view", image.size(), window::flags::borderless);
+	software_window win("Image view", image.size(), window::flags::borderless);
 	blit(image, win.surface());
 	win.update();
 	SDL_Delay(1313);

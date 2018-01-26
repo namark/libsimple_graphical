@@ -1,6 +1,7 @@
 #include <type_traits>
 
 #include "simple/support/function_utils.hpp"
+#include "simple/support/enum.hpp"
 #include "window.h"
 
 namespace simple::graphical
@@ -16,20 +17,10 @@ namespace simple::graphical
 				title.c_str(),
 				position.x(), position.y(),
 				size.x(), size.y(),
-				static_cast<std::underlying_type_t<flags>>(options)
+				support::to_integer(options)
 			),
 			SDL_DestroyWindow
-		),
-		_surface(SDL_GetWindowSurface(guts().get()))
-	{}
-
-	const graphical::surface & window::surface() const
-	{
-		return _surface;
-	}
-
-	window::free_surface::free_surface(SDL_Surface * guts)
-		: surface(guts, support::nop)
+		)
 	{}
 
 } // namespace simple::graphical
