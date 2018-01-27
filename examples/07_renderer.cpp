@@ -13,14 +13,21 @@ int main() try
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	{
-		renderer_window win("Borderless window", point2D(640, 480), window::flags::borderless);
+		renderer_window win("Borderless window", point2D(600, 600), window::flags::borderless);
 		auto center = win.renderer().target_size() / 2;
 
 		fill(win.renderer(), 0x7700AA_rgb);
 		win.update();
 		SDL_Delay(1313);
 
-		fill(win.renderer(), 0x330077_rgb, anchored_rect{ {300, 300}, center, half2D });
+		fill(win.renderer(), 0x330077_rgb, anchored_rect{ {300, 300}, center - 75, half2D });
+		fill(win.renderer(), 0x330077_rgb, anchored_rect{ {300, 300}, center + 75, half2D });
+		win.update();
+		SDL_Delay(1313);
+
+		win.renderer().blend(blend_mode::alpha);
+		fill(win.renderer(), 0xFFFFFF77_rgba, anchored_rect{ {100, 100}, center - 25, half2D });
+		fill(win.renderer(), 0xFFFFFF77_rgba, anchored_rect{ {100, 100}, center + 25, half2D });
 		win.update();
 		SDL_Delay(1313);
 

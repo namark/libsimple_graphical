@@ -33,8 +33,13 @@ namespace simple::graphical
 		explicit renderer(surface&& target) = delete;
 
 		void update() const noexcept;
+
 		rgba_pixel color() const noexcept;
 		void color(const rgba_pixel& new_value) const noexcept;
+
+		blend_mode blend() const noexcept;
+		void blend(blend_mode new_value) const noexcept;
+
 		point2D target_size() const noexcept;
 
 		protected:

@@ -32,6 +32,22 @@ void renderer::color(const rgba_pixel& new_value) const noexcept
 	SDL_SetRenderDrawColor(guts().get(), new_value.r(), new_value.g(), new_value.b(), new_value.a());
 }
 
+blend_mode renderer::blend() const noexcept
+{
+	SDL_BlendMode result;
+	SDL_GetRenderDrawBlendMode(guts().get(), &result);
+	return static_cast<blend_mode>(result);
+}
+
+void renderer::blend(blend_mode new_value) const noexcept
+{
+	SDL_SetRenderDrawBlendMode
+	(
+		guts().get(),
+		static_cast<SDL_BlendMode>(support::to_integer(new_value))
+	);
+}
+
 point2D renderer::target_size() const noexcept
 {
 	auto result = -point2D::one();
