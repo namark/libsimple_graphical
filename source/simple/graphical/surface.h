@@ -62,10 +62,11 @@ namespace simple::graphical
 		std::unique_ptr<byte[], void(*)(byte*)> pixels_owner {nullptr, support::nop};
 
 		friend bool fill(const surface&, color);
-		friend bool fill(const surface&, color, range2D);
+		friend bool fill(const surface&, color, const range2D&);
 		friend bool blit(const surface&, range2D, const surface&, point2D);
 		friend bool blit(const surface&, range2D, const surface&, range2D);
 		friend surface convert(const surface& source, const pixel_format& format);
+		friend class renderer;
 	};
 
 } // namespace simple::graphical
