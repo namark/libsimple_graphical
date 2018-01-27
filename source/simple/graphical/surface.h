@@ -42,6 +42,15 @@ namespace simple::graphical
 		const pixel_format& format() const;
 		point2D size() const;
 
+		blend_mode blend() const noexcept;
+		void blend(blend_mode new_value) const noexcept;
+
+		uint8_t alpha() const noexcept;
+		void alpha(uint8_t new_value) const noexcept;
+
+		rgb_pixel color() const noexcept;
+		void color(rgb_pixel new_value) const noexcept;
+
 		void save(const char* filename) const;
 
 		protected:
@@ -61,8 +70,8 @@ namespace simple::graphical
 		free_pixel_format _format;
 		std::unique_ptr<byte[], void(*)(byte*)> pixels_owner {nullptr, support::nop};
 
-		friend bool fill(const surface&, color);
-		friend bool fill(const surface&, color, const range2D&);
+		friend bool fill(const surface&, class color);
+		friend bool fill(const surface&, class color, const range2D&);
 		friend bool blit(const surface&, range2D, const surface&, point2D);
 		friend bool blit(const surface&, range2D, const surface&, range2D);
 		friend surface convert(const surface& source, const pixel_format& format);

@@ -179,6 +179,46 @@ namespace simple::graphical
 		return {guts()->w, guts()->h};
 	}
 
+	blend_mode surface::blend() const noexcept
+	{
+		SDL_BlendMode result;
+		SDL_GetSurfaceBlendMode(guts().get(), &result);
+		return static_cast<blend_mode>(result);
+	}
+
+	void surface::blend(blend_mode new_value) const noexcept
+	{
+		SDL_SetSurfaceBlendMode
+		(
+			guts().get(),
+			static_cast<SDL_BlendMode>(support::to_integer(new_value))
+		);
+	}
+
+	uint8_t surface::alpha() const noexcept
+	{
+		uint8_t result;
+		SDL_GetSurfaceAlphaMod(guts().get(), &result);
+		return result;
+	}
+
+	void surface::alpha(uint8_t new_value) const noexcept
+	{
+		SDL_SetSurfaceAlphaMod(guts().get(), new_value);
+	}
+
+	rgb_pixel surface::color() const noexcept
+	{
+		rgb_pixel result;
+		SDL_GetSurfaceColorMod(guts().get(), &result.r(), &result.g(), &result.b());
+		return result;
+	}
+
+	void surface::color(rgb_pixel new_value) const noexcept
+	{
+		SDL_SetSurfaceColorMod(guts().get(), new_value.r(), new_value.g(), new_value.b());
+	}
+
 	void surface::save(const char* filename) const
 	{
 		utils::throw_sdl_error(SDL_SaveBMP(guts().get(), filename));
