@@ -57,6 +57,9 @@ namespace simple::graphical
 		constexpr static const point2D undefined_position = point2D::one() * SDL_WINDOWPOS_UNDEFINED;
 		constexpr static const point2D center_position = point2D::one() * SDL_WINDOWPOS_CENTERED;
 
+		point2D size() const noexcept;
+		void size(point2D value) const noexcept;
+
 		protected:
 
 		window

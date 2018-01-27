@@ -7,7 +7,17 @@
 namespace simple::graphical
 {
 
-	using flags = window::flags;
+	point2D window::size() const noexcept
+	{
+		auto result = -point2D::one();
+		SDL_GetWindowSize(guts().get(), &result.x(), &result.y());
+		return result;
+	}
+
+	void window::size(point2D value) const noexcept
+	{
+		SDL_SetWindowSize(guts().get(), value.x(), value.y());
+	}
 
 	window::window(std::string title, point2D size, flags options, point2D position)
 		: sdl_window_wrapper
