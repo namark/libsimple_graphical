@@ -1,5 +1,6 @@
 override	CPPFLAGS	+= --std=c++1z
 override	CPPFLAGS	+= -MMD -MP
+override	CPPFLAGS	+= -I./include
 override	CPPFLAGS	+= $(shell cat .cxxflags | xargs)
 
 ARFLAGS	:= $(ARFLAGS)c
