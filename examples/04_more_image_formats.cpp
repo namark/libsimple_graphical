@@ -75,7 +75,7 @@ int main(int argc, char const* argv[]) try
 
 		int api_width = stb_image.size().x();
 		int api_height = stb_image.size().y();
-		pixel_format format(pixel_format::type::rgb888);
+		pixel_format format(pixel_format::type::rgb24);
 
 		// Create a unique pointer
 		auto data_size = api_width * api_height * format.bytes();
@@ -86,7 +86,17 @@ int main(int argc, char const* argv[]) try
 		surface random_image(std::move(image_data), point2D(api_width, api_height), format);
 		show_image(random_image);
 
-		// TODO: or create a surface and populate it in place (needs surface pixel access(lock/unlock) API)
+		// or create a surface and populate it in place.
+		surface random_image2(point2D(api_width, api_height), format);
+		auto pixels = std::get<pixel_writer<rgb_pixel, surface::byte>>(random_image2.pixels());
+		// Note that we have to do this row by row, since SDL might pad the pixels, which might or (more likely) might not be something that an image loading library supports
+		surface::byte* row = pixels.row();
+		for(int rows = pixels.raw_size().y(); rows --> 0; )
+		{
+			std::generate(row, row + pixels.raw_size().x(), std::ref(random_byte));
+			row = pixels.next_row(row);
+		}
+		show_image(random_image2);
 
 	}
 	SDL_Quit();

@@ -219,6 +219,30 @@ namespace simple::graphical
 		SDL_SetSurfaceColorMod(guts().get(), new_value.r(), new_value.g(), new_value.b());
 	}
 
+	surface::pixels_variant surface::pixels() const noexcept
+	{
+		int bpp = format().bytes();
+		point2D raw_size = size();
+		raw_size.x() *= bpp;
+		switch(bpp)
+		{
+			case 1:
+			return pixel_writer<byte>(
+				reinterpret_cast<byte*>(guts()->pixels), raw_size, guts()->pitch);
+			case 2:
+			return pixel_writer<uint16_t, byte>(
+				reinterpret_cast<byte*>(guts()->pixels), raw_size, guts()->pitch);
+			case 3:
+			return pixel_writer<rgb_pixel, byte>(
+				reinterpret_cast<byte*>(guts()->pixels), raw_size, guts()->pitch);
+			case 4:
+			return pixel_writer<rgba_pixel, byte>(
+				reinterpret_cast<byte*>(guts()->pixels), raw_size, guts()->pitch);
+			default:
+				return std::monostate{};
+		}
+	}
+
 	void surface::save(const char* filename) const
 	{
 		utils::throw_sdl_error(SDL_SaveBMP(guts().get(), filename));

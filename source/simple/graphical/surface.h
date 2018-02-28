@@ -2,19 +2,20 @@
 #define SIMPLE_GRAPHICAL_SURFACE_H
 
 #include <memory>
+#include <variant>
 #include <SDL2/SDL.h>
 
 #include "simple/support/function_utils.hpp"
 
 #include "common_def.h"
 #include "pixel_format.h"
+#include "pixels.hpp"
+#include "color.h"
 #include "utils.hpp"
 
 namespace simple::graphical
 {
 	using sdl_surface_wrapper = utils::sdl_object_wrapper<SDL_Surface>;
-
-	class color;
 
 	class surface : public sdl_surface_wrapper
 	{
@@ -22,6 +23,15 @@ namespace simple::graphical
 		public:
 
 		using byte = unsigned char;
+
+		// TODO: add more pixel types, for all the crazy pixel formats SDL supports
+		using pixels_variant = std::variant<
+			std::monostate,
+			pixel_writer<byte>, // 1 bytes per pixel
+			pixel_writer<uint16_t, byte>, // 2 bytes per pixel
+			pixel_writer<rgb_pixel, byte>, // 3 bytes per pixel
+			pixel_writer<rgba_pixel, byte> // 4 bytes per pixel
+		>;
 
 		explicit surface(const surface& other);
 		surface(surface&& other) = default;
@@ -50,6 +60,8 @@ namespace simple::graphical
 
 		rgb_pixel color() const noexcept;
 		void color(rgb_pixel new_value) const noexcept;
+
+		pixels_variant pixels() const noexcept;
 
 		void save(const char* filename) const;
 
