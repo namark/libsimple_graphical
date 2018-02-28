@@ -26,9 +26,32 @@ namespace simple::graphical
 		using base::base;
 
 		template<size_t S = Size, std::enable_if_t<S == 4>* = nullptr>
-		color_vector(const color_vector<Type, 3>& other)
+		constexpr color_vector(const color_vector<Type, 3>& other)
 		: color_vector(other.r(), other.g(), other.b(), value_limits().upper())
 		{}
+
+		constexpr explicit color_vector(const base& other)
+		: base(other)
+		{}
+
+		template<typename OtherType, typename T = Type,
+		std::enable_if_t<std::is_integral_v<OtherType>>* = nullptr,
+		std::enable_if_t<std::is_floating_point_v<T>>* = nullptr>
+		explicit constexpr color_vector(const color_vector<OtherType, Size>& other)
+		{
+			for(size_t i = 0; i < Size; ++i)
+				(*this)[i] = static_cast<Type>(other[i]) / static_cast<Type>(other.value_limits().upper());
+		}
+
+		template<typename OtherType, typename T = Type,
+		std::enable_if_t<std::is_integral_v<T>>* = nullptr,
+		std::enable_if_t<std::is_floating_point_v<OtherType>>* = nullptr>
+		explicit constexpr color_vector(const color_vector<OtherType, Size>& other)
+		{
+			using std::round;
+			for(size_t i = 0; i < Size; ++i)
+				(*this)[i] = std::round(other[i] * static_cast<OtherType>(value_limits().upper()));
+		}
 
 		constexpr Type& r() { return this->x(); }
 		constexpr Type& g() { return this->y(); }
@@ -73,6 +96,25 @@ namespace simple::graphical
 	using rgb_vector = color_vector<float, 3>;
 	using rgba_vector = color_vector<float, 4>;
 
+	// for ADL to find these
+	using ::operator+;
+	using ::operator-;
+	using ::operator*;
+	using ::operator/;
+	using ::operator%;
+	using ::operator&;
+	using ::operator|;
+	using ::operator^;
+	using ::operator+=;
+	using ::operator-=;
+	using ::operator*=;
+	using ::operator/=;
+	using ::operator%=;
+	using ::operator&=;
+	using ::operator|=;
+	using ::operator^=;
+
+
 	class pixel_format;
 
 	class color
@@ -113,5 +155,13 @@ namespace details
 } // namespace color_literals
 
 } // namespace simple::graphical
+
+namespace simple
+{
+	template<typename C, size_t D>
+	struct support::define_array_operators<graphical::color_vector<C,D>> :
+	public support::define_array_operators<geom::vector<C,D>>
+	{};
+} // namespace simple
 
 #endif /* end of include guard */
