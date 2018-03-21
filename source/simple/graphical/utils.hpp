@@ -21,7 +21,7 @@ namespace simple::graphical::utils
 
 	inline bool check_sdl_error(int error_code)
 	{
-		return error_code < 0;
+		return 0 != error_code;
 	}
 
 	template <typename Type>
@@ -35,6 +35,10 @@ namespace simple::graphical::utils
 	template <typename SDL_Object>
 	class sdl_object_wrapper
 	{
+
+		public:
+		bool operator==(const sdl_object_wrapper& other) { return _guts == other._guts; }
+		bool operator!=(const sdl_object_wrapper& other) { return !(*this == other); }
 
 		protected:
 		using Deleter = void(*)(SDL_Object*);
@@ -56,6 +60,8 @@ namespace simple::graphical::utils
 			return _guts;
 		}
 
+		friend std::hash<sdl_object_wrapper>;
+
 	};
 
 	template <typename Rect>
@@ -75,4 +81,17 @@ namespace simple::graphical::utils
 
 } // namespace simple::graphical::utils
 
+namespace std
+{
+	template <typename T>
+	struct hash<simple::graphical::utils::sdl_object_wrapper<T>>
+	{
+		std::size_t operator()(const simple::graphical::utils::sdl_object_wrapper<T>& object) const
+		{
+			using std::hash;
+			return hash(object._guts);
+		}
+	};
+
+} // namespace std
 #endif /* end of include guard */
