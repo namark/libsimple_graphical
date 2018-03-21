@@ -9,6 +9,7 @@ renderer_window::renderer_window
 	point2D size,
 	flags window_options,
 	renderer::flags renderer_options,
+	quality_hint renderer_scale_quality,
 	point2D position
 )
 	: window(title, size, window_options, position),
@@ -20,6 +21,7 @@ renderer_window::renderer_window
 			-1,
 			support::to_integer(renderer_options)
 		),
+		renderer_scale_quality,
 		SDL_DestroyRenderer
 	)
 {}

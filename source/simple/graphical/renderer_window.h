@@ -16,6 +16,7 @@ namespace simple::graphical
 			point2D size,
 			flags window_options = flags::shown,
 			renderer::flags renderer_options = renderer::flags::automatic,
+			quality_hint renderer_scale_quality = quality_hint::nearest,
 			point2D position = undefined_position
 		);
 

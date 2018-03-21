@@ -31,6 +31,12 @@ int main() try
 		win.update();
 		SDL_Delay(1313);
 
+		// load and render a static texture
+
+		// generate and render a straming texture
+
+		// target a render texture with renderer
+
 	}
 	SDL_Quit();
 	return 0;
