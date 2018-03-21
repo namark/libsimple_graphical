@@ -1,8 +1,11 @@
 #ifndef SIMPLE_GRAPHICAL_PIXELS_H
 #define SIMPLE_GRAPHICAL_PIXELS_H
 
-#include "common_def.h"
 #include <memory>
+#include <variant>
+
+#include "common_def.h"
+#include "color_vector.hpp"
 
 namespace simple::graphical
 {
@@ -53,15 +56,15 @@ namespace simple::graphical
 
 			template<typename T = Tag, typename RT = tag::select_raw_type<T, RawType>>
 			RT* row_offset(RawType* row, int offset = 1) const noexcept
-			{ return reinterpret_cast<RT*>(reinterpret_cast<uint8_t*>(row) + offset * _pitch); }
+			{ return reinterpret_cast<RT*>(reinterpret_cast<pixel_byte*>(row) + offset * _pitch); }
 
 			template<typename T = Tag, typename RT = tag::select_raw_type<T, RawType>>
 			RT* next_row(RT* row) const noexcept
-			{ return reinterpret_cast<RT*>(reinterpret_cast<uint8_t*>(row) + _pitch); }
+			{ return reinterpret_cast<RT*>(reinterpret_cast<pixel_byte*>(row) + _pitch); }
 
 			template<typename T = Tag, typename RT = tag::select_raw_type<T, RawType>>
 			RT* prev_row(RawType* row) const noexcept
-			{ return reinterpret_cast<RT*>(reinterpret_cast<uint8_t*>(row) - _pitch); }
+			{ return reinterpret_cast<RT*>(reinterpret_cast<pixel_byte*>(row) - _pitch); }
 
 			RawType& operator[](point2D position) const noexcept
 			{ return row(position.y())[position.x()]; }
@@ -104,7 +107,7 @@ namespace simple::graphical
 
 			protected:
 
-			impl(uint8_t* target, point2D size, int pitch = 0)
+			impl(pixel_byte* target, point2D size, int pitch = 0)
 			: _raw(target), _raw_size(size), _pitch(pitch ? pitch : size.x() * sizeof(RawType))
 			{}
 
@@ -123,7 +126,7 @@ namespace simple::graphical
 			{}
 
 			private:
-			uint8_t* _raw;
+			pixel_byte* _raw;
 			point2D _raw_size;
 			int _pitch;
 
@@ -136,6 +139,18 @@ namespace simple::graphical
 
 	} // namespace pixel_view_details
 
+
+	// TODO: add more pixel types, for all the crazy pixel formats SDL supports
+	template<template<typename Pixel, typename Raw = Pixel> typename PixelView>
+	using pixel_view_variant = std::variant<
+		PixelView<pixel_byte>, // 1 bytes per pixel
+		PixelView<uint16_t, pixel_byte>, // 2 bytes per pixel
+		PixelView<rgb_pixel, pixel_byte>, // 3 bytes per pixel
+		PixelView<rgba_pixel, pixel_byte> // 4 bytes per pixel
+	>;
+
+	class pixel_format;
+
 	template<typename Pixel, typename RawType = Pixel>
 	class pixel_writer :
 		public pixel_view_details::impl<pixel_view_details::tag::writer, Pixel, RawType>
@@ -145,10 +160,10 @@ namespace simple::graphical
 		using impl::impl;
 
 		private:
-		pixel_writer(uint8_t* target, point2D size, int pitch = 0)
+		pixel_writer(pixel_byte* target, point2D size, int pitch = 0)
 			: impl(target, size, pitch)
 		{}
-		friend class surface;
+		friend pixel_view_variant<pixel_writer> pixel_writer_from_format(pixel_byte*, point2D, int, int bpp);
 	};
 
 	template<typename Pixel, typename RawType = Pixel>
@@ -173,6 +188,8 @@ namespace simple::graphical
 		{}
 	};
 
+	using pixel_reader_variant = pixel_view_variant<pixel_reader>;
+	using pixel_writer_variant = pixel_view_variant<pixel_writer>;
 
 } // namespace simple::graphical
 

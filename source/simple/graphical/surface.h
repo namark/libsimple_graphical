@@ -2,8 +2,6 @@
 #define SIMPLE_GRAPHICAL_SURFACE_H
 
 #include <memory>
-#include <variant>
-#include <SDL2/SDL.h>
 
 #include "simple/support/function_utils.hpp"
 
@@ -22,16 +20,7 @@ namespace simple::graphical
 
 		public:
 
-		using byte = unsigned char;
-
-		// TODO: add more pixel types, for all the crazy pixel formats SDL supports
-		using pixels_variant = std::variant<
-			std::monostate,
-			pixel_writer<byte>, // 1 bytes per pixel
-			pixel_writer<uint16_t, byte>, // 2 bytes per pixel
-			pixel_writer<rgb_pixel, byte>, // 3 bytes per pixel
-			pixel_writer<rgba_pixel, byte> // 4 bytes per pixel
-		>;
+		using byte = pixel_byte;
 
 		explicit surface(const surface& other);
 		surface(surface&& other) = default;
@@ -61,7 +50,7 @@ namespace simple::graphical
 		rgb_pixel color() const noexcept;
 		void color(rgb_pixel new_value) const noexcept;
 
-		pixels_variant pixels() const noexcept;
+		pixel_writer_variant pixels() const noexcept;
 
 		void save(const char* filename) const;
 
@@ -89,6 +78,8 @@ namespace simple::graphical
 		friend surface convert(const surface& source, const pixel_format& format);
 		friend class renderer;
 	};
+
+	pixel_writer_variant pixel_writer_from_format(pixel_byte* data, point2D size, int pitch, int bpp);
 
 } // namespace simple::graphical
 
