@@ -18,8 +18,8 @@ enum ColorIndex
 
 constexpr auto colors = std::array
 {
-	rgba_pixel::gray(0_u8),
-	rgba_pixel::gray(255_u8)
+	rgba_pixel::white(0_u8),
+	rgba_pixel::white(255_u8)
 };
 
 int main(int argc, char const* argv[]) try

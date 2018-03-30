@@ -8,8 +8,9 @@
 namespace simple::graphical
 {
 
-	template<typename Type, size_t Size, std::enable_if_t<Size == 3 || Size == 4>* = nullptr>
-	struct color_vector : public geom::vector<Type, Size>
+	template<typename Type, size_t Size, typename RGBA_Order = std::make_index_sequence<Size>,
+	std::enable_if_t<Size == 3 || Size == 4>* = nullptr>
+	struct color_vector : public geom::vector<Type, Size, RGBA_Order>
 	{
 		using base = geom::vector<Type, Size>;
 		using int_type = uint32_t;
@@ -61,18 +62,52 @@ namespace simple::graphical
 		constexpr Type b() const { return const_cast<color_vector*>(this)->b(); };
 		constexpr Type a() const { return const_cast<color_vector*>(this)->a(); };
 
-		template<typename T = Type, size_t S = Size,
-			std::enable_if_t<S == 3 && std::is_same_v<Type, T>>* = nullptr>
-		constexpr static color_vector gray(T value)
+		template<size_t S = Size, std::enable_if_t<S == 3>* = nullptr>
+		constexpr static color_vector white(const Type& value = value_limits().upper())
 		{
-			return {value, value, value};
+			return static_cast<color_vector>(base::one(value));
 		};
 
-		template<typename T = Type, size_t S = Size,
-			std::enable_if_t<S == 4 && std::is_same_v<Type, T>>* = nullptr>
-		constexpr static color_vector gray(T value, T alpha = value_limits().upper())
+		template<size_t S = Size, std::enable_if_t<S == 3>* = nullptr>
+		constexpr static color_vector red(const Type& value = value_limits().upper())
+		{
+			return static_cast<color_vector>(base::i(value));
+		};
+
+		template<size_t S = Size, std::enable_if_t<S == 3>* = nullptr>
+		constexpr static color_vector green(const Type& value = value_limits().upper())
+		{
+			return static_cast<color_vector>(base::j(value));
+		};
+
+		template<size_t S = Size, std::enable_if_t<S == 3>* = nullptr>
+		constexpr static color_vector blue(const Type& value = value_limits().upper())
+		{
+			return static_cast<color_vector>(base::k(value));
+		};
+
+		template<size_t S = Size, std::enable_if_t<S == 4>* = nullptr>
+		constexpr static color_vector white(const Type& value = value_limits().upper(), const Type& alpha = value_limits().upper())
 		{
 			return {value, value, value, alpha};
+		}
+
+		template<size_t S = Size, std::enable_if_t<S == 4>* = nullptr>
+		constexpr static color_vector red(const Type& value = value_limits().upper(), const Type& alpha = value_limits().upper())
+		{
+			return static_cast<color_vector>(base::i(value) + base::l(alpha));
+		}
+
+		template<size_t S = Size, std::enable_if_t<S == 4>* = nullptr>
+		constexpr static color_vector green(const Type& value = value_limits().upper(), const Type& alpha = value_limits().upper())
+		{
+			return static_cast<color_vector>(base::j(value) + base::l(alpha));
+		}
+
+		template<size_t S = Size, std::enable_if_t<S == 4>* = nullptr>
+		constexpr static color_vector blue(const Type& value = value_limits().upper(), const Type& alpha = value_limits().upper())
+		{
+			return static_cast<color_vector>(base::k(value) + base::l(alpha));
 		}
 
 		template <int_type value>
