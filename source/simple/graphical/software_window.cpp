@@ -19,7 +19,7 @@ void software_window::update() const
 
 bool software_window::refresh() const noexcept
 {
-	return utils::check_sdl_error(SDL_UpdateWindowSurface(guts().get()));
+	return !utils::check_sdl_error(SDL_UpdateWindowSurface(guts().get()));
 }
 
 software_window::free_surface::free_surface(SDL_Surface * guts)

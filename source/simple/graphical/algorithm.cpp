@@ -9,26 +9,26 @@ namespace simple::graphical
 
 	bool fill(const surface& surf, color col)
 	{
-		return utils::check_sdl_error(
+		return !utils::check_sdl_error(
 			SDL_FillRect(surf.guts().get(), NULL, static_cast<uint32_t>(col)));
 	}
 
 	bool fill(const surface& surf, color col, const range2D& area)
 	{
 		auto r = utils::to_sdl_rect<SDL_Rect>(area);
-		return utils::check_sdl_error(
+		return !utils::check_sdl_error(
 			SDL_FillRect(surf.guts().get(), &r, static_cast<uint32_t>(col)));
 	}
 
 	bool fill(const renderer& rend)
 	{
-		return utils::check_sdl_error(SDL_RenderClear(rend.guts().get()));
+		return !utils::check_sdl_error(SDL_RenderClear(rend.guts().get()));
 	}
 
 	bool fill(const renderer& rend, const range2D& area)
 	{
 		auto r = utils::to_sdl_rect<SDL_Rect>(area);
-		return utils::check_sdl_error(SDL_RenderFillRect(rend.guts().get(), &r));
+		return !utils::check_sdl_error(SDL_RenderFillRect(rend.guts().get(), &r));
 	}
 
 	bool fill(const renderer& rend, const rgba_pixel& color)
@@ -52,7 +52,7 @@ namespace simple::graphical
 	{
 		auto sr = utils::to_sdl_rect<SDL_Rect>(src_range);
 		auto dr = utils::to_sdl_rect<SDL_Rect>({position});
-		return utils::check_sdl_error(
+		return !utils::check_sdl_error(
 			SDL_BlitSurface(source.guts().get(), &sr, destination.guts().get(), &dr));
 	}
 
@@ -65,7 +65,7 @@ namespace simple::graphical
 	{
 		auto sr = utils::to_sdl_rect<SDL_Rect>(src_range);
 		auto dr = utils::to_sdl_rect<SDL_Rect>(dest_range);
-		return utils::check_sdl_error(
+		return !utils::check_sdl_error(
 			SDL_BlitScaled(source.guts().get(), &sr, destination.guts().get(), &dr));
 	}
 
