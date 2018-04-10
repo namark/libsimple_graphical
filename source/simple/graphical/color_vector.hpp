@@ -114,6 +114,7 @@ namespace simple::graphical
 		constexpr static color_vector from() noexcept
 		{ return from(value); }
 
+		template <typename T = Type, std::enable_if_t<std::is_integral_v<T>>* = nullptr>
 		constexpr static color_vector from(int_type value) noexcept
 		{
 			color_vector result{};

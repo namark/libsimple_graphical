@@ -69,7 +69,7 @@ namespace simple::graphical
 			RawType& operator[](point2D position) const noexcept
 			{ return row(position.y())[position.x()]; }
 
-			auto get(point2D position)
+			auto get(point2D position) const
 			-> std::conditional_t<std::is_same_v<Pixel,RawType>, const Pixel&, Pixel>
 			{
 				if constexpr(std::is_same_v<Pixel,RawType>)
@@ -84,7 +84,7 @@ namespace simple::graphical
 			}
 
 			template<typename T=Tag, std::enable_if_t<std::is_same_v<T, tag::writer>>* = nullptr>
-			void set(const Pixel& pixel, point2D position)
+			void set(const Pixel& pixel, point2D position) const
 			{
 				if constexpr(std::is_same_v<Pixel,RawType>)
 					*this[position] = pixel;
