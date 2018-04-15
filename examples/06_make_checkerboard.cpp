@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <array>
 
+#include "simple/graphical/initializer.h"
 #include "simple/graphical/algorithm.h"
 #include "simple/support/misc.hpp"
 
@@ -39,17 +40,15 @@ int main(int argc, char const* argv[]) try
 	point2D tile_size { ston<int>(argv[1]), ston<int>(argv[2]) };
 	point2D board_dimensions { ston<int>(argv[3]), ston<int>(argv[4]) };
 
-	SDL_Init(SDL_INIT_EVERYTHING);
-	{
-		surface board (tile_size * board_dimensions, pixel_format(pixel_format::type::index8));
-		auto palette = board.format().palette();
-		if(palette)
-			palette->setColors(colors);
-		fill(board, color(White));
-		checker_up(board, tile_size, color(Black));
-		board.save(argv[5]);
-	}
-	SDL_Quit();
+	initializer init;
+
+	surface board (tile_size * board_dimensions, pixel_format(pixel_format::type::index8));
+	auto palette = board.format().palette();
+	if(palette)
+		palette->setColors(colors);
+	fill(board, color(White));
+	checker_up(board, tile_size, color(Black));
+	board.save(argv[5]);
 
 	return 0;
 }

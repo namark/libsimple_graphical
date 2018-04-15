@@ -4,6 +4,7 @@
 #include <optional>
 #include <functional>
 
+#include "simple/graphical/initializer.h"
 #include "simple/graphical/software_window.h"
 #include "simple/graphical/algorithm.h"
 
@@ -35,71 +36,67 @@ int main(int argc, char const* argv[]) try
 		return -1;
 	}
 
-	SDL_Init(SDL_INIT_EVERYTHING);
+	initializer init;
+
+	// Usage of a unique pointer based adapter is very simple.
+	surface stb_image(stb_load_surface(argv[1]));
+	show_image(stb_image);
+
+	// However the situation is different with owning containers, such as std::vector in picopng.
+	auto picopng_image = picopng_load_image(argv[1]);
+	if(picopng_image)
 	{
 
-		// Usage of a unique pointer based adapter is very simple.
-		surface stb_image(stb_load_surface(argv[1]));
-		show_image(stb_image);
+		// You can use the pixel data as is, making sure the actual owner will outlive any such usage,
+		surface image(
+				picopng_image->first.data(),
+				picopng_image->second,
+				pixel_format(pixel_format::type::rgba8888));
+		show_image(image);
 
-		// However the situation is different with owning containers, such as std::vector in picopng.
-		auto picopng_image = picopng_load_image(argv[1]);
-		if(picopng_image)
-		{
-
-			// You can use the pixel data as is, making sure the actual owner will outlive any such usage,
-			surface image(
-					picopng_image->first.data(),
-					picopng_image->second,
-					pixel_format(pixel_format::type::rgba8888));
-			show_image(image);
-
-			// or copy the data.
-			auto image_data = picopng_image->first;
-			auto image_data_copy = std::make_unique<surface::byte[]>(image_data.size());
-			std::copy(image_data.begin(), image_data.end(), image_data_copy.get());
-			surface picopng_image_copy (
-					std::move(image_data_copy),
-					picopng_image->second,
-					pixel_format(pixel_format::type::rgba8888));
-			show_image(picopng_image_copy);
-
-		}
-		else
-			std::puts("Picopng failed"); // Picopng is expected to fail for formats other than png, that stb can handle.
-
-		// Another possibility is, if the library can extract image information(format, size)
-		// without loading it, and allows loading to arbitrary preallocated storage.
-		// Lodepng (full version of picopng) might be an example of that kind of API, but not sure.
-		// Here I just generate some random pixels as a demo.
-
-		int api_width = stb_image.size().x();
-		int api_height = stb_image.size().y();
-		pixel_format format(pixel_format::type::rgb24);
-
-		// Create a unique pointer
-		auto data_size = api_width * api_height * format.bytes();
-		auto image_data = std::make_unique<surface::byte[]>(data_size);
-		std::generate(image_data.get(), image_data.get() + data_size, random_byte);
-
-		// and pass it on,
-		surface random_image(std::move(image_data), point2D(api_width, api_height), format);
-		show_image(random_image);
-
-		// or create a surface and populate it in place.
-		surface random_image2(point2D(api_width, api_height), format);
-		auto pixels = std::get<pixel_writer<rgb_pixel, surface::byte>>(random_image2.pixels());
-		// Note that we have to do this row by row, since SDL might pad the pixels, which might or (more likely) might not be something that an image loading library supports
-		surface::byte* row = pixels.row();
-		for(int rows = pixels.raw_size().y(); rows --> 0; )
-		{
-			std::generate(row, row + pixels.raw_size().x(), std::ref(random_byte));
-			row = pixels.next_row(row);
-		}
-		show_image(random_image2);
+		// or copy the data.
+		auto image_data = picopng_image->first;
+		auto image_data_copy = std::make_unique<surface::byte[]>(image_data.size());
+		std::copy(image_data.begin(), image_data.end(), image_data_copy.get());
+		surface picopng_image_copy (
+				std::move(image_data_copy),
+				picopng_image->second,
+				pixel_format(pixel_format::type::rgba8888));
+		show_image(picopng_image_copy);
 
 	}
-	SDL_Quit();
+	else
+		std::puts("Picopng failed"); // Picopng is expected to fail for formats other than png, that stb can handle.
+
+	// Another possibility is, if the library can extract image information(format, size)
+	// without loading it, and allows loading to arbitrary preallocated storage.
+	// Lodepng (full version of picopng) might be an example of that kind of API, but not sure.
+	// Here I just generate some random pixels as a demo.
+
+	int api_width = stb_image.size().x();
+	int api_height = stb_image.size().y();
+	pixel_format format(pixel_format::type::rgb24);
+
+	// Create a unique pointer
+	auto data_size = api_width * api_height * format.bytes();
+	auto image_data = std::make_unique<surface::byte[]>(data_size);
+	std::generate(image_data.get(), image_data.get() + data_size, random_byte);
+
+	// and pass it on,
+	surface random_image(std::move(image_data), point2D(api_width, api_height), format);
+	show_image(random_image);
+
+	// or create a surface and populate it in place.
+	surface random_image2(point2D(api_width, api_height), format);
+	auto pixels = std::get<pixel_writer<rgb_pixel, surface::byte>>(random_image2.pixels());
+	// Note that we have to do this row by row, since SDL might pad the pixels, which might or (more likely) might not be something that an image loading library supports
+	surface::byte* row = pixels.row();
+	for(int rows = pixels.raw_size().y(); rows --> 0; )
+	{
+		std::generate(row, row + pixels.raw_size().x(), std::ref(random_byte));
+		row = pixels.next_row(row);
+	}
+	show_image(random_image2);
 
 	return 0;
 }

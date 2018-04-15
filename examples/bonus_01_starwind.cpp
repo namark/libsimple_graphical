@@ -4,6 +4,7 @@
 #include <chrono>
 #include <thread>
 
+#include "simple/graphical/initializer.h"
 #include "simple/graphical/software_window.h"
 #include "simple/graphical/algorithm.h"
 #include "simple/support/algorithm.hpp"
@@ -57,35 +58,33 @@ int main(int argc, char const* argv[]) try
 		star.z() = z_dist(rand);
 	}
 
-	SDL_Init(SDL_INIT_EVERYTHING);
-	{
-		software_window win("Starwind", {600,600}, window::flags::borderless);
-		auto pixels = std::get<pixel_writer<rgba_pixel, pixel_byte>>(win.surface().pixels());
-		auto half_size = float2(win.surface().size()) / 2;
+	initializer init;
 
-		for
-		(
-			auto [position, next_frame_time] = std::tuple{0.f, std::chrono::high_resolution_clock::now()};
-			position < distance;
-			position += speed,
-			next_frame_time += frame_time,
-			std::this_thread::sleep_until(next_frame_time)
-		)
+	software_window win("Starwind", {600,600}, window::flags::borderless);
+	auto pixels = std::get<pixel_writer<rgba_pixel, pixel_byte>>(win.surface().pixels());
+	auto half_size = float2(win.surface().size()) / 2;
+
+	for
+	(
+		auto [position, next_frame_time] = std::tuple{0.f, std::chrono::high_resolution_clock::now()};
+		position < distance;
+		position += speed,
+		next_frame_time += frame_time,
+		std::this_thread::sleep_until(next_frame_time)
+	)
+	{
+		fill(win.surface(), win.surface().format().color(0_rgb));
+		for(auto&& star : stars)
 		{
-			fill(win.surface(), win.surface().format().color(0_rgb));
-			for(auto&& star : stars)
-			{
-				star.z() -= speed;
-				if(star.z() < .01f)
-					star.z() = 1.f;
-				const auto perspective_star = star.xy() / star.z();
-				if(-float2::one() < perspective_star && perspective_star < float2::one())
-					pixel_setter(pixels, color * (-star.z() + 1), (half_size + perspective_star * (half_size)));
-			}
-			win.update();
+			star.z() -= speed;
+			if(star.z() < .01f)
+				star.z() = 1.f;
+			const auto perspective_star = star.xy() / star.z();
+			if(-float2::one() < perspective_star && perspective_star < float2::one())
+				pixel_setter(pixels, color * (-star.z() + 1), (half_size + perspective_star * (half_size)));
 		}
+		win.update();
 	}
-	SDL_Quit();
 
 	return 0;
 }

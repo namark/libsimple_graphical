@@ -1,5 +1,6 @@
 #include <cstdio>
 
+#include "simple/graphical/initializer.h"
 #include "simple/graphical/software_window.h"
 #include "simple/graphical/algorithm.h"
 
@@ -13,44 +14,42 @@ constexpr auto half2D = vector2D::one() * 0.5f;
 int main() try
 {
 
-	SDL_Init(SDL_INIT_EVERYTHING);
-	{
-		software_window win("Look at rects", {640, 480}, window::flags::borderless);
-		auto center = win.surface().size() / 2;
+	initializer init;
 
-		auto dark = win.surface().format().color({80_u8,80_u8,80_u8});
-		auto bright = win.surface().format().color({160_u8,160_u8,160_u8});
+	software_window win("Look at rects", {640, 480}, window::flags::borderless);
+	auto center = win.surface().size() / 2;
 
-		fill(win.surface(), dark);
-		// draws a checker pattern (see common.h)
-		checker_up(win.surface(), point2D::one() * 10, bright);
+	auto dark = win.surface().format().color({80_u8,80_u8,80_u8});
+	auto bright = win.surface().format().color({160_u8,160_u8,160_u8});
 
-		win.update();
-		SDL_Delay(1313);
+	fill(win.surface(), dark);
+	// draws a checker pattern (see common.h)
+	checker_up(win.surface(), point2D::one() * 10, bright);
 
-		surface alpha_layer(win.surface().size(), pixel_format(pixel_format::type::rgba8888));
-		auto light_blue = alpha_layer.format().color({0_u8, 177_u8, 177_u8, 177_u8});
-		auto light_pink = alpha_layer.format().color({177_u8, 0_u8, 177_u8, 177_u8});
+	win.update();
+	SDL_Delay(1313);
 
-		// fill on surface does not blend, it overwrites
-		fill(alpha_layer, light_blue, anchored_rect{ {100, 300}, center, half2D } );
-		fill(alpha_layer, light_pink, anchored_rect{ {300, 100}, center, half2D } );
-		blit(alpha_layer, win.surface()); // blit blends
+	surface alpha_layer(win.surface().size(), pixel_format(pixel_format::type::rgba8888));
+	auto light_blue = alpha_layer.format().color({0_u8, 177_u8, 177_u8, 177_u8});
+	auto light_pink = alpha_layer.format().color({177_u8, 0_u8, 177_u8, 177_u8});
 
-		win.update();
-		SDL_Delay(1313);
+	// fill on surface does not blend, it overwrites
+	fill(alpha_layer, light_blue, anchored_rect{ {100, 300}, center, half2D } );
+	fill(alpha_layer, light_pink, anchored_rect{ {300, 100}, center, half2D } );
+	blit(alpha_layer, win.surface()); // blit blends
 
-		surface alpha_layer2(alpha_layer.size(), alpha_layer.format());
+	win.update();
+	SDL_Delay(1313);
 
-		// so these will be blended with the previous two
-		fill(alpha_layer2, light_blue, anchored_rect{ {150, 150}, center + 75, half2D } );
-		fill(alpha_layer2, light_pink, anchored_rect{ {150, 150}, center - 75, half2D } );
-		blit(alpha_layer2, win.surface()); // thanks to this blit
+	surface alpha_layer2(alpha_layer.size(), alpha_layer.format());
 
-		win.update();
-		SDL_Delay(1313 * 3);
-	}
-	SDL_Quit();
+	// so these will be blended with the previous two
+	fill(alpha_layer2, light_blue, anchored_rect{ {150, 150}, center + 75, half2D } );
+	fill(alpha_layer2, light_pink, anchored_rect{ {150, 150}, center - 75, half2D } );
+	blit(alpha_layer2, win.surface()); // thanks to this blit
+
+	win.update();
+	SDL_Delay(1313 * 3);
 
 	return 0;
 }

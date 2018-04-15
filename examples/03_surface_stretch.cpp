@@ -1,5 +1,6 @@
 #include <cstdio>
 
+#include "simple/graphical/initializer.h"
 #include "simple/graphical/software_window.h"
 #include "simple/graphical/algorithm.h"
 #include "simple/support/misc.hpp"
@@ -20,18 +21,16 @@ int main(int argc, char const* argv[]) try
 
 	point2D size { ston<int>(argv[2]), ston<int>(argv[3]) };
 
-	SDL_Init(SDL_INIT_EVERYTHING);
-	{
-		software_window win("Stretchy", size, window::flags::borderless);
-		surface image(argv[1]);
+	initializer init;
 
-		// blit will stretch if a destination rectangle is specified
-		blit(image, win.surface(), rect{win.surface().size()});
+	software_window win("Stretchy", size, window::flags::borderless);
+	surface image(argv[1]);
 
-		win.update();
-		SDL_Delay(1313);
-	}
-	SDL_Quit();
+	// blit will stretch if a destination rectangle is specified
+	blit(image, win.surface(), rect{win.surface().size()});
+
+	win.update();
+	SDL_Delay(1313);
 
 	return 0;
 }

@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <random>
 
+#include "simple/graphical/initializer.h"
 #include "simple/graphical/software_window.h"
 #include "simple/graphical/algorithm.h"
 
@@ -21,21 +22,19 @@ int main(int argc, char const* argv[]) try
 		return -1;
 	}
 
-	SDL_Init(SDL_INIT_EVERYTHING);
-	{
-		software_window win("Mess", {640, 480}, window::flags::borderless);
-		surface image(argv[1]);
+	initializer init;
 
-		// significantly improves subsequent blit performance, if the original image pixel format differs from window's pixel format
-		image = convert(image, win.surface().format());
+	software_window win("Mess", {640, 480}, window::flags::borderless);
+	surface image(argv[1]);
 
-		for(int i = 0; i < 1000; ++i)
-			blit(image, win.surface(), randomPoint(win.surface().size() - image.size()));
+	// significantly improves subsequent blit performance, if the original image pixel format differs from window's pixel format
+	image = convert(image, win.surface().format());
 
-		win.update();
-		SDL_Delay(1313);
-	}
-	SDL_Quit();
+	for(int i = 0; i < 1000; ++i)
+		blit(image, win.surface(), randomPoint(win.surface().size() - image.size()));
+
+	win.update();
+	SDL_Delay(1313);
 
 	return 0;
 }

@@ -1,5 +1,6 @@
 #include <cstdio>
 
+#include "simple/graphical/initializer.h"
 #include "simple/graphical/algorithm.h"
 #include "simple/support/misc.hpp"
 
@@ -26,26 +27,23 @@ int main(int argc, char const* argv[]) try
 	point2D tile_size { ston<int>(argv[1]), ston<int>(argv[2]) };
 	point2D board_dimensions { ston<int>(argv[3]), ston<int>(argv[4]) };
 
-	SDL_Init(SDL_INIT_EVERYTHING);
+	initializer init;
+	surface board (tile_size * board_dimensions, pixel_format(pixel_format::type::rgb24));
+	const auto start = rgb_vector::red() + rgb_vector::green();
+	const auto end = rgb_vector::blue();
+
+	checker_up(board, tile_size, [start, end](const surface& s, rect r)
 	{
-		surface board (tile_size * board_dimensions, pixel_format(pixel_format::type::rgb24));
-		const auto start = rgb_vector::red() + rgb_vector::green();
-		const auto end = rgb_vector::blue();
+		auto end_ratio = rgb_vector(r.position.mix<0,1,1>(1)) / rgb_vector(s.size().mix<0,1,1>());
+		auto start_ratio = rgb_vector::white() - end_ratio;
+		class color c(s.format(), rgb_pixel(start * start_ratio + end * end_ratio ));
+		fill(s, c, r);
 
-		checker_up(board, tile_size, [start, end](const surface& s, rect r)
-		{
-			auto end_ratio = rgb_vector(r.position.mix<0,1,1>(1)) / rgb_vector(s.size().mix<0,1,1>());
-			auto start_ratio = rgb_vector::white() - end_ratio;
-			class color c(s.format(), rgb_pixel(start * start_ratio + end * end_ratio ));
-			fill(s, c, r);
-
-			r.position -= r.size * point2D::i(); // a bit of a hack
-			class color c2(s.format(), rgb_pixel(start * end_ratio + end * start_ratio ));
-			fill(s, c2, r);
-		});
-		board.save(argv[5]);
-	}
-	SDL_Quit();
+		r.position -= r.size * point2D::i(); // a bit of a hack
+		class color c2(s.format(), rgb_pixel(start * end_ratio + end * start_ratio ));
+		fill(s, c2, r);
+	});
+	board.save(argv[5]);
 
 	return 0;
 }
