@@ -4,16 +4,16 @@
 #include <memory>
 
 #include "simple/support/function_utils.hpp"
+#include "simple/sdlcore/utils.hpp"
 
 #include "common_def.h"
 #include "pixel_format.h"
 #include "pixels.hpp"
 #include "color.h"
-#include "utils.hpp"
 
 namespace simple::graphical
 {
-	using sdl_surface_wrapper = utils::sdl_object_wrapper<SDL_Surface>;
+	using sdl_surface_wrapper = sdlcore::utils::object_wrapper<SDL_Surface>;
 
 	class surface : public sdl_surface_wrapper
 	{

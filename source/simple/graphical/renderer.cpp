@@ -5,6 +5,7 @@
 #include "renderer.h"
 #include "renderer_window.h"
 
+using namespace simple;
 using namespace simple::graphical;
 
 static void set_scale_quality_hint(quality_hint hint)
@@ -154,10 +155,10 @@ void renderer::update(const texture& tex, pixel_reader_variant data_variant, poi
 {
 	std::visit([&tex, &destination](auto&& data)
 	{
-		auto dr = utils::to_sdl_rect<SDL_Rect>(rect{data.size()});
+		auto dr = sdlcore::utils::to_rect<SDL_Rect>(rect{data.size()});
 		dr.x = destination.x();
 		dr.y = destination.y();
-		utils::throw_sdl_error(
+		sdlcore::utils::throw_error(
 			SDL_UpdateTexture(tex.guts(), &dr, data.row(), data.row(1) - data.row()) );
 	}, data_variant);
 }
@@ -168,8 +169,8 @@ void renderer::update(const streaming_texture& tex, std::function<void(pixel_wri
 	((void)ignore0, (void)ignore1, (void)ignore2); // silence unused variable warning
 	void* pixels;
 	int pitch;
-	auto rect = utils::to_sdl_rect<SDL_Rect>(area);
-	utils::throw_sdl_error(
+	auto rect = sdlcore::utils::to_rect<SDL_Rect>(area);
+	sdlcore::utils::throw_error(
 			SDL_LockTexture(tex.guts(), &rect, &pixels, &pitch) );
 	callback(pixel_writer_from_format(
 				reinterpret_cast<pixel_byte*>(pixels),
@@ -186,7 +187,7 @@ void renderer::update(const streaming_texture& tex, std::function<void(pixel_wri
 
 	void* pixels;
 	int pitch;
-	utils::throw_sdl_error(
+	sdlcore::utils::throw_error(
 			SDL_LockTexture(tex.guts(), NULL, &pixels, &pitch) );
 	callback(pixel_writer_from_format(
 				reinterpret_cast<pixel_byte*>(pixels),
@@ -204,7 +205,7 @@ std::optional<render_texture> renderer::target() const noexcept
 
 void renderer::target(render_texture tex) const
 {
-	utils::throw_sdl_error(SDL_SetRenderTarget(guts().get(), tex.guts()));
+	sdlcore::utils::throw_error(SDL_SetRenderTarget(guts().get(), tex.guts()));
 }
 
 void renderer::target_default() const noexcept
@@ -214,22 +215,22 @@ void renderer::target_default() const noexcept
 
 bool renderer::render(const texture& source) const
 {
-	return !utils::check_sdl_error(SDL_RenderCopy(guts().get(), source.guts(), NULL, NULL));
+	return !sdlcore::utils::check_error(SDL_RenderCopy(guts().get(), source.guts(), NULL, NULL));
 }
 
 bool renderer::render(const texture& source, const range2D& destination) const
 {
-	auto dr = utils::to_sdl_rect<SDL_Rect>(destination);
-	return !utils::check_sdl_error(SDL_RenderCopy(guts().get(), source.guts(), NULL, &dr));
+	auto dr = sdlcore::utils::to_rect<SDL_Rect>(destination);
+	return !sdlcore::utils::check_error(SDL_RenderCopy(guts().get(), source.guts(), NULL, &dr));
 }
 
 static bool render_copy_ex(SDL_Renderer* rend, SDL_Texture* tex, range2D src, range2D dest, double angle, point2D center, texture::flip_direction flip)
 {
-	auto sr = utils::to_sdl_rect<SDL_Rect>(src);
-	auto dr = utils::to_sdl_rect<SDL_Rect>(dest);
+	auto sr = sdlcore::utils::to_rect<SDL_Rect>(src);
+	auto dr = sdlcore::utils::to_rect<SDL_Rect>(dest);
 	auto c = SDL_Point{center.x(), center.y()};
-	return !utils::check_sdl_error(SDL_RenderCopyEx(rend, tex, &sr, &dr,
-				angle, &c, static_cast<SDL_RendererFlip>(simple::support::to_integer(flip))));
+	return !sdlcore::utils::check_error(SDL_RenderCopyEx(rend, tex, &sr, &dr,
+				angle, &c, static_cast<SDL_RendererFlip>(support::to_integer(flip))));
 }
 
 bool renderer::render(const texture_view& source, point2D position) const

@@ -1,5 +1,4 @@
 #include "palette_view.h"
-#include "utils.hpp"
 
 using namespace simple::graphical;
 

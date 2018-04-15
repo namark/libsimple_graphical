@@ -1,7 +1,7 @@
 #include "simple/support/function_utils.hpp"
 #include "simple/support/enum.hpp"
+#include "simple/sdlcore/utils.hpp"
 #include "surface.h"
-#include "utils.hpp"
 
 using simple::support::to_integer;
 
@@ -249,7 +249,7 @@ namespace simple::graphical
 
 	void surface::save(const char* filename) const
 	{
-		utils::throw_sdl_error(SDL_SaveBMP(guts().get(), filename));
+		sdlcore::utils::throw_error(SDL_SaveBMP(guts().get(), filename));
 	}
 
 } // namespace simple::graphical

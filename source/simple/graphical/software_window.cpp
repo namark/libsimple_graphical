@@ -14,12 +14,12 @@ const surface & software_window::surface() const noexcept
 
 void software_window::update() const
 {
-	utils::throw_sdl_error(SDL_UpdateWindowSurface(guts().get()));
+	sdlcore::utils::throw_error(SDL_UpdateWindowSurface(guts().get()));
 }
 
 bool software_window::refresh() const noexcept
 {
-	return !utils::check_sdl_error(SDL_UpdateWindowSurface(guts().get()));
+	return !sdlcore::utils::check_error(SDL_UpdateWindowSurface(guts().get()));
 }
 
 software_window::free_surface::free_surface(SDL_Surface * guts)

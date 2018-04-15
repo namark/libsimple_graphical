@@ -6,14 +6,14 @@
 #include <SDL2/SDL.h>
 
 #include "simple/support/enum_flags_operators.hpp"
+#include "simple/sdlcore/utils.hpp"
 
 #include "common_def.h"
-#include "utils.hpp"
 
 namespace simple::graphical
 {
 
-	using sdl_window_wrapper = utils::sdl_object_wrapper<SDL_Window>;
+	using sdl_window_wrapper = sdlcore::utils::object_wrapper<SDL_Window>;
 
 	class window : public sdl_window_wrapper
 	{

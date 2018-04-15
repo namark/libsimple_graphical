@@ -2,9 +2,9 @@
 #define SIMPLE_GRAPHICAL_RENDERER_H
 
 #include "simple/support/enum_flags_operators.hpp"
+#include "simple/sdlcore/utils.hpp"
 
 #include "common_def.h"
-#include "utils.hpp"
 #include "color.h"
 #include "texture.h"
 #include "pixels.hpp"
@@ -12,7 +12,7 @@
 namespace simple::graphical
 {
 
-	using sdl_renderer_wrapper = utils::sdl_object_wrapper<SDL_Renderer>;
+	using sdl_renderer_wrapper = sdlcore::utils::object_wrapper<SDL_Renderer>;
 
 	class renderer_window;
 	class surface;

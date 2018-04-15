@@ -4,14 +4,14 @@
 #include <memory>
 #include <optional>
 #include <SDL2/SDL.h>
-#include "utils.hpp"
+#include "simple/sdlcore/utils.hpp"
 #include "color.h"
 #include "palette_view.h"
 
 namespace simple::graphical
 {
 
-	using sdl_pixel_format_wrapper = utils::sdl_object_wrapper<const SDL_PixelFormat>;
+	using sdl_pixel_format_wrapper = sdlcore::utils::object_wrapper<const SDL_PixelFormat>;
 
 	class surface;
 

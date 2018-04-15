@@ -1,6 +1,6 @@
 #include "common_def.h"
 #include "simple/support/enum.hpp"
-#include "utils.hpp"
+#include "simple/sdlcore/utils.hpp"
 #include "texture.h"
 
 using namespace simple::graphical;
@@ -12,7 +12,7 @@ std::tuple<bool, texture::access, point2D, pixel_format::type> texture::info() c
 	int acs;
 	std::tuple<bool, access, point2D, pixel_format::type> result;
 	point2D& size = std::get<point2D>(result);
-	std::get<bool>(result) = !utils::check_sdl_error(
+	std::get<bool>(result) = !sdlcore::utils::check_error(
 			SDL_QueryTexture(_guts, &format, &acs, &size.x(), &size.y()));
 	std::get<pixel_format::type>(result) = static_cast<pixel_format::type>(format);
 	std::get<access>(result) = static_cast<access>(acs);
@@ -25,13 +25,13 @@ texture::texture(SDL_Texture* guts) : _guts(guts)
 texture::texture(SDL_Renderer* rend, SDL_Surface* surface)
 	: _guts(SDL_CreateTextureFromSurface(rend, surface))
 {
-	utils::throw_sdl_error(_guts);
+	sdlcore::utils::throw_error(_guts);
 }
 
 texture::texture(SDL_Renderer* rend, pixel_format::type format, point2D size, access acs)
 	: _guts(SDL_CreateTexture(rend, to_integer(format), to_integer(acs), size.x(), size.y()))
 {
-	utils::throw_sdl_error(_guts);
+	sdlcore::utils::throw_error(_guts);
 }
 
 SDL_Texture* texture::guts() const

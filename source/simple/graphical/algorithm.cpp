@@ -1,34 +1,33 @@
-#include <SDL2/SDL.h>
+#include "simple/sdlcore/utils.hpp"
 #include "algorithm.h"
 #include "surface.h"
 #include "renderer.h"
-#include "utils.hpp"
 
 namespace simple::graphical
 {
 
 	bool fill(const surface& surf, color col)
 	{
-		return !utils::check_sdl_error(
+		return !sdlcore::utils::check_error(
 			SDL_FillRect(surf.guts().get(), NULL, static_cast<uint32_t>(col)));
 	}
 
 	bool fill(const surface& surf, color col, const range2D& area)
 	{
-		auto r = utils::to_sdl_rect<SDL_Rect>(area);
-		return !utils::check_sdl_error(
+		auto r = sdlcore::utils::to_rect<SDL_Rect>(area);
+		return !sdlcore::utils::check_error(
 			SDL_FillRect(surf.guts().get(), &r, static_cast<uint32_t>(col)));
 	}
 
 	bool fill(const renderer& rend)
 	{
-		return !utils::check_sdl_error(SDL_RenderClear(rend.guts().get()));
+		return !sdlcore::utils::check_error(SDL_RenderClear(rend.guts().get()));
 	}
 
 	bool fill(const renderer& rend, const range2D& area)
 	{
-		auto r = utils::to_sdl_rect<SDL_Rect>(area);
-		return !utils::check_sdl_error(SDL_RenderFillRect(rend.guts().get(), &r));
+		auto r = sdlcore::utils::to_rect<SDL_Rect>(area);
+		return !sdlcore::utils::check_error(SDL_RenderFillRect(rend.guts().get(), &r));
 	}
 
 	bool fill(const renderer& rend, const rgba_pixel& color)
@@ -50,9 +49,9 @@ namespace simple::graphical
 
 	bool blit(const surface& source, range2D src_range, const surface& destination, point2D position)
 	{
-		auto sr = utils::to_sdl_rect<SDL_Rect>(src_range);
-		auto dr = utils::to_sdl_rect<SDL_Rect>({position});
-		return !utils::check_sdl_error(
+		auto sr = sdlcore::utils::to_rect<SDL_Rect>(src_range);
+		auto dr = sdlcore::utils::to_rect<SDL_Rect>({position});
+		return !sdlcore::utils::check_error(
 			SDL_BlitSurface(source.guts().get(), &sr, destination.guts().get(), &dr));
 	}
 
@@ -63,9 +62,9 @@ namespace simple::graphical
 
 	bool blit(const surface& source, range2D src_range, const surface& destination, range2D dest_range)
 	{
-		auto sr = utils::to_sdl_rect<SDL_Rect>(src_range);
-		auto dr = utils::to_sdl_rect<SDL_Rect>(dest_range);
-		return !utils::check_sdl_error(
+		auto sr = sdlcore::utils::to_rect<SDL_Rect>(src_range);
+		auto dr = sdlcore::utils::to_rect<SDL_Rect>(dest_range);
+		return !sdlcore::utils::check_error(
 			SDL_BlitScaled(source.guts().get(), &sr, destination.guts().get(), &dr));
 	}
 
