@@ -15,6 +15,11 @@ endif
 
 override LDLIBS		+= -lsimple_graphical -lSDL2main -lSDL2
 
+ifdef ENABLE_OPENGL_EXAMPLES
+override CPPFLAGS	+= -DENABLE_OPENGL_EXAMPLES
+override LDLIBS	+= -lGL -lGLEW
+endif
+
 TEMPDIR	:= temp
 DISTDIR	:= out
 
