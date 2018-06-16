@@ -2,19 +2,24 @@
 
 #if ENABLE_OPENGL_EXAMPLES
 #include <chrono>
+#include <string>
 #include <thread>
 
 #include "simple/graphical/initializer.h"
 #include "simple/graphical/gl_window.h"
-#include "simple/graphical/algorithm.h"
+#include "simple/support/misc.hpp"
+#include "common.h"
 
-#include <GL/glew.h>
 #include "external/nanovg.h"
 #define NANOVG_GL2_IMPLEMENTATION
 #include "external/nanovg_gl.h"
 
+using namespace std::literals;
+
 using namespace std::chrono_literals;
 using namespace simple::graphical;
+
+using simple::support::ston;
 
 // based on
 // https://www.khanacademy.org/computer-programming/bouncing-ball/863892852
@@ -25,36 +30,59 @@ class black_ball_sketch
 	// how high the ball is, where 0 is on the ground
 	float y = 0;
 
-	public: void draw(NVGcontext*);
+	public:
+	void draw(NVGcontext*);
+	// how many times did the animation loop
+	size_t loops = 0;
+
 } black_ball_sketch;
 
-int main() try
+
+int main(int argc, char const* argv[]) try
 {
+
+	switch(argc)
+	{
+		case 0: std::puts("Command not specified??");
+		case 1: std::puts("Number of jumps not specified!");
+			return -1;
+	}
+
+	const char* record_prefix = argc > 2 ? argv[2] : nullptr;
+	const auto jumps = ston<size_t>(argv[1]);
+
 	initializer init;
 
 	gl_window::global.request<gl_window::attribute::major_version>(2);
 	gl_window::global.request<gl_window::attribute::stencil>(8);
 	gl_window win("nanovg", point2D(400, 400), window::flags::borderless);
+	surface snapshot(win.size(), pixel_format(pixel_format::type::rgb24));
 
 	glewInit();
 	struct NVGcontext* vg = nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 
 	const auto frame_time = 33ms;
-	const auto end_at = std::chrono::high_resolution_clock::now() + 11s;
 	for
 	(
-		auto next_frame = std::chrono::high_resolution_clock::now();
-		next_frame < end_at;
+		auto [frame, next_frame] = std::tuple{0, std::chrono::high_resolution_clock::now()};
+		black_ball_sketch.loops < jumps;
 		next_frame += frame_time,
-		std::this_thread::sleep_until(next_frame)
+		++frame,
+		record_prefix ? void() : std::this_thread::sleep_until(next_frame)
 	)
 	{
 		glClearColor(1,1,1,1);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		nvgBeginFrame(vg, win.size().x(), win.size().y(), 1);
 		black_ball_sketch.draw(vg);
 		nvgEndFrame(vg);
 		win.update();
+
+		if(record_prefix)
+		{
+			gl_read_pixels(snapshot);
+			snapshot.save((record_prefix + to_string(frame, 4) + ".bmp").c_str());
+		}
 	}
 
 	return 0;
@@ -82,7 +110,7 @@ void black_ball_sketch::draw(NVGcontext* vg)
 	float shadowSize = 0.2 * y + 50;
 	// draw the shadow
 	nvgBeginPath(vg);
-	nvgEllipse(vg, 200, 300, shadowSize/2, 5);
+	nvgEllipse(vg, 200, 290, shadowSize/2, 5);
 	nvgFillColor(vg, nvgRGB(grey, grey, grey));
 	nvgFill(vg);
 
@@ -109,7 +137,10 @@ void black_ball_sketch::draw(NVGcontext* vg)
 	nvgFill(vg);
 
 	if (y < 0) // if y becomes negative, the ball has hit the ground
+	{
 		t = 0; // reset t to make it "bounce" up again
+		++loops;
+	}
 
 	t += 5;
 }
