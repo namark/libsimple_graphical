@@ -17,7 +17,7 @@ namespace simple::graphical
 	: sdl_surface_wrapper
 	(
 #if SDL_VERSION_ATLEAST(2,0,6)
-	 	SDL_DuplicateSurface(other.guts().get());
+	 	SDL_DuplicateSurface(other.guts().get()),
 #else
 		SDL_ConvertSurface(other.guts().get(), other.guts()->format, other.guts()->flags),
 #endif
@@ -131,9 +131,9 @@ namespace simple::graphical
 		(
 			pixels.get(),
 			size.x(), size.y(),
-			format.bits(),
+			0,
 			pitch ? pitch : SDL_BYTESPERPIXEL(to_integer(format)) * size.x(),
-			to_integer(format);
+			to_integer(format)
 		),
 		SDL_FreeSurface
 	),
@@ -141,14 +141,14 @@ namespace simple::graphical
 	pixels_owner(pixels.release(), [](byte* x){ delete [] x; })
 	{}
 
-	surface::surface(std::unique_ptr<byte[], void(*)(byte*)> pixels, point2D size, const pixel_format& format, int pitch)
+	surface::surface(std::unique_ptr<byte[], void(*)(byte*)> pixels, point2D size, pixel_format::type format, int pitch)
 	: sdl_surface_wrapper
 	(
 		SDL_CreateRGBSurfaceWithFormatFrom
 		(
 			pixels.get(),
 			size.x(), size.y(),
-			format.bits(),
+			0,
 			pitch ? pitch : SDL_BYTESPERPIXEL(to_integer(format)) * size.x(),
 			to_integer(format)
 		),
