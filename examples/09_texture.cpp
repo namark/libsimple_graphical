@@ -43,7 +43,7 @@ int main(int argc, char const* argv[]) try
 		for(int2 p{}; p < pixels.size(); ++p.y(), p.x() = 0)
 		for(; p < pixels.size(); p += int2::i())
 			pixels.set( rgb_pixel(rgb_vector(
-							( (vector2D)p /(vector2D)pixels.size() ).xyz(blue) )), p );
+							( (float2)p /(float2)pixels.size() ).xyz(blue) )), p );
 	};
 
 	for(int angle = 0; blue <= 1.0; blue += 0.01, angle += 5)

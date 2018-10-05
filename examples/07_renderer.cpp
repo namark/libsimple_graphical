@@ -8,7 +8,7 @@
 using namespace simple::graphical;
 using namespace color_literals;
 
-constexpr auto half2D = vector2D::one() * 0.5f;
+constexpr auto half2D = float2::one() * 0.5f;
 
 int main() try
 {

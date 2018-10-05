@@ -23,7 +23,7 @@ int main() try
 	{
 		for(; position < pixels.size(); ++position.x())
 		{
-			auto ratio = vector2D(position) / vector2D(pixels.size());
+			auto ratio = float2(position) / float2(pixels.size());
 			color = start + (end - start) * rgb_vector(ratio.xyz(1.0f));
 			pixels.set( rgb_pixel(color), position );
 		}
