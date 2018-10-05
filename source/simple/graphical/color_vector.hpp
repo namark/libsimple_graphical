@@ -179,9 +179,9 @@ namespace details
 
 namespace simple
 {
-	template<typename C, size_t D>
-	struct support::define_array_operators<graphical::color_vector<C,D>> :
-	public support::define_array_operators<geom::vector<C,D>>
+	template<typename C, size_t D, typename O>
+	struct support::define_array_operators<graphical::color_vector<C,D,O>> :
+	public support::define_array_operators<geom::vector<C,D,O>>
 	{};
 } // namespace simple
 
