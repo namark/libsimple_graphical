@@ -14,21 +14,21 @@
 using namespace simple::graphical;
 
 template <typename Filler>
-inline void checker_up(const surface& board, point2D tile_size, Filler filler)
+inline void checker_up(const surface& board, int2 tile_size, Filler filler)
 {
 	using simple::support::intersects;
 
 	rect board_rect{board.size()};
 	rect tile = rect{tile_size};
-	while( intersects<point2D>(board_rect, tile) )
+	while( intersects<int2>(board_rect, tile) )
 	{
 		filler(board, tile);
 
-		for(size_t i = 0; i < point2D::dimensions; ++i)
+		for(size_t i = 0; i < int2::dimensions; ++i)
 		{
-			auto step = tile.size * 2 * point2D::unit(i);
+			auto step = tile.size * 2 * int2::unit(i);
 			auto t = tile;
-			while( t.position += step, intersects<point2D>(board_rect, t) )
+			while( t.position += step, intersects<int2>(board_rect, t) )
 				filler(board, t);
 		}
 
@@ -37,7 +37,7 @@ inline void checker_up(const surface& board, point2D tile_size, Filler filler)
 
 }
 
-inline void checker_up(const surface& board, point2D tile_size, color tile_color)
+inline void checker_up(const surface& board, int2 tile_size, color tile_color)
 {
 	checker_up(board, tile_size, [tile_color](auto&& surf, auto&& rect){ fill(surf, tile_color, rect); });
 }

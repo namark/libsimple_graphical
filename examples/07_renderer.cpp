@@ -14,7 +14,7 @@ int main() try
 {
 	initializer init;
 
-	renderer_window win("Borderless window", point2D(600, 600), window::flags::borderless);
+	renderer_window win("Borderless window", int2(600, 600), window::flags::borderless);
 	auto center = win.renderer().target_size() / 2;
 
 	fill(win.renderer(), 0x7700AA_rgb);

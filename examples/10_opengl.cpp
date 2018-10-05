@@ -14,7 +14,7 @@ int main() try
 {
 	initializer init;
 
-	gl_window win("OpenGL", point2D(640, 480), window::flags::borderless);
+	gl_window win("OpenGL", int2(640, 480), window::flags::borderless);
 
 	glClearColor(0.7,0,0.7,1);
 	glClear(GL_COLOR_BUFFER_BIT);

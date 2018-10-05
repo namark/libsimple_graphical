@@ -12,9 +12,9 @@ namespace simple::graphical
 		software_window
 		(
 			std::string title,
-			point2D size,
+			int2 size,
 			flags windowflags = flags::shown,
-			point2D position = undefined_position
+			int2 position = undefined_position
 		);
 
 		const graphical::surface & surface() const noexcept;

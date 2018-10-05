@@ -20,7 +20,7 @@ surface stb_load_surface(const char* filename);
 
 // picopng adapter
 auto picopng_load_image(const char* filename)
--> std::optional<std::pair<std::vector<unsigned char>, point2D>>;
+-> std::optional<std::pair<std::vector<unsigned char>, int2>>;
 
 void show_image(const surface& image);
 
@@ -83,11 +83,11 @@ int main(int argc, char const* argv[]) try
 	std::generate(image_data.get(), image_data.get() + data_size, random_byte);
 
 	// and pass it on,
-	surface random_image(std::move(image_data), point2D(api_width, api_height), format);
+	surface random_image(std::move(image_data), int2(api_width, api_height), format);
 	show_image(random_image);
 
 	// or create a surface and populate it in place.
-	surface random_image2(point2D(api_width, api_height), format);
+	surface random_image2(int2(api_width, api_height), format);
 	auto pixels = std::get<pixel_writer<rgb_pixel, surface::byte>>(random_image2.pixels());
 	// Note that we have to do this row by row, since SDL might pad the pixels, which might or (more likely) might not be something that an image loading library supports
 	surface::byte* row = pixels.row();
@@ -116,7 +116,7 @@ surface stb_load_surface(const char* filename)
 {
 	using namespace std::literals;
 
-	point2D size;
+	int2 size;
 	int orig_format;
 
 	auto data = stbi_load(filename, &size.x(), &size.y(), &orig_format, STBI_rgb_alpha);
@@ -133,7 +133,7 @@ surface stb_load_surface(const char* filename)
 }
 
 auto picopng_load_image(const char* filename)
--> std::optional<std::pair<std::vector<unsigned char>, point2D>>
+-> std::optional<std::pair<std::vector<unsigned char>, int2>>
 {
 	auto png = simple::file::dump( simple::file::bropex(filename) );
 
@@ -144,7 +144,7 @@ auto picopng_load_image(const char* filename)
 			reinterpret_cast<unsigned char*>(png.data()), png.size());
 
 	return 0 == picopng_result
-		? std::make_optional(std::make_pair(std::move(image_data), point2D(image_size)))
+		? std::make_optional(std::make_pair(std::move(image_data), int2(image_size)))
 		: std::nullopt;
 }
 

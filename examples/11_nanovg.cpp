@@ -55,7 +55,7 @@ int main(int argc, char const* argv[]) try
 
 	gl_window::global.request<gl_window::attribute::major_version>(2);
 	gl_window::global.request<gl_window::attribute::stencil>(8);
-	gl_window win("nanovg", point2D(400, 400), window::flags::borderless);
+	gl_window win("nanovg", int2(400, 400), window::flags::borderless);
 	surface snapshot(win.size(), pixel_format(pixel_format::type::rgb24));
 
 	glewInit();

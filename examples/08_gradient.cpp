@@ -19,7 +19,7 @@ int main() try
 	auto start = rgb_vector(0.0f,1.0f,1.0f);
 	auto end = rgb_vector(1.0f,0.0f,1.0f);
 	rgb_vector color;
-	for(point2D position{}; position < pixels.size(); ++position.y())
+	for(int2 position{}; position < pixels.size(); ++position.y())
 	{
 		for(; position < pixels.size(); ++position.x())
 		{

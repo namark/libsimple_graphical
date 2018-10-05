@@ -46,8 +46,8 @@ namespace simple::graphical
 			explicit impl(const pixels<RawType>&);
 
 
-			const point2D& raw_size() const noexcept { return _raw_size; }
-			point2D size() const noexcept { return _raw_size / point2D(ratio, 1); }
+			const int2& raw_size() const noexcept { return _raw_size; }
+			int2 size() const noexcept { return _raw_size / int2(ratio, 1); }
 
 			// TODO: proper row_iterator interface?
 			template<typename T = Tag, typename RT = tag::select_raw_type<T, RawType>>
@@ -66,10 +66,10 @@ namespace simple::graphical
 			RT* prev_row(RawType* row) const noexcept
 			{ return reinterpret_cast<RT*>(reinterpret_cast<pixel_byte*>(row) - _pitch); }
 
-			RawType& operator[](point2D position) const noexcept
+			RawType& operator[](int2 position) const noexcept
 			{ return row(position.y())[position.x()]; }
 
-			auto get(point2D position) const
+			auto get(int2 position) const
 			-> std::conditional_t<std::is_same_v<Pixel,RawType>, const Pixel&, Pixel>
 			{
 				if constexpr(std::is_same_v<Pixel,RawType>)
@@ -84,7 +84,7 @@ namespace simple::graphical
 			}
 
 			template<typename T=Tag, std::enable_if_t<std::is_same_v<T, tag::writer>>* = nullptr>
-			void set(const Pixel& pixel, point2D position) const
+			void set(const Pixel& pixel, int2 position) const
 			{
 				if constexpr(std::is_same_v<Pixel,RawType>)
 					*this[position] = pixel;
@@ -107,7 +107,7 @@ namespace simple::graphical
 
 			protected:
 
-			impl(pixel_byte* target, point2D size, int pitch = 0)
+			impl(pixel_byte* target, int2 size, int pitch = 0)
 			: _raw(target), _raw_size(size), _pitch(pitch ? pitch : size.x() * sizeof(RawType))
 			{}
 
@@ -127,10 +127,10 @@ namespace simple::graphical
 
 			private:
 			pixel_byte* _raw;
-			point2D _raw_size;
+			int2 _raw_size;
 			int _pitch;
 
-			static int to_index(const point2D& position, int pitch) noexcept
+			static int to_index(const int2& position, int pitch) noexcept
 			{
 				return position.x() * sizeof(RawType) + position.y() * pitch;
 			}
@@ -160,10 +160,10 @@ namespace simple::graphical
 		using impl::impl;
 
 		private:
-		pixel_writer(pixel_byte* target, point2D size, int pitch = 0)
+		pixel_writer(pixel_byte* target, int2 size, int pitch = 0)
 			: impl(target, size, pitch)
 		{}
-		friend pixel_view_variant<pixel_writer> pixel_writer_from_format(pixel_byte*, point2D, int, int bpp);
+		friend pixel_view_variant<pixel_writer> pixel_writer_from_format(pixel_byte*, int2, int, int bpp);
 	};
 
 	template<typename Pixel, typename RawType = Pixel>

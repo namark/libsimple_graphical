@@ -7,19 +7,19 @@
 namespace simple::graphical
 {
 
-	point2D window::size() const noexcept
+	int2 window::size() const noexcept
 	{
-		auto result = -point2D::one();
+		auto result = -int2::one();
 		SDL_GetWindowSize(guts().get(), &result.x(), &result.y());
 		return result;
 	}
 
-	void window::size(point2D value) const noexcept
+	void window::size(int2 value) const noexcept
 	{
 		SDL_SetWindowSize(guts().get(), value.x(), value.y());
 	}
 
-	window::window(std::string title, point2D size, flags options, point2D position)
+	window::window(std::string title, int2 size, flags options, int2 position)
 		: sdl_window_wrapper
 		(
 			SDL_CreateWindow

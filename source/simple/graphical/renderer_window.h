@@ -13,11 +13,11 @@ namespace simple::graphical
 		renderer_window
 		(
 			std::string title,
-			point2D size,
+			int2 size,
 			flags window_options = flags::shown,
 			renderer::flags renderer_options = renderer::flags::automatic,
 			quality_hint renderer_scale_quality = quality_hint::nearest,
-			point2D position = undefined_position
+			int2 position = undefined_position
 		);
 
 		const graphical::renderer& renderer() const noexcept;

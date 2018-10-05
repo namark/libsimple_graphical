@@ -24,7 +24,7 @@ int main() try
 
 	fill(win.surface(), dark);
 	// draws a checker pattern (see common.h)
-	checker_up(win.surface(), point2D::one() * 10, bright);
+	checker_up(win.surface(), int2::one() * 10, bright);
 
 	win.update();
 	SDL_Delay(1313);

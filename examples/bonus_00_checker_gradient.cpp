@@ -24,8 +24,8 @@ int main(int argc, char const* argv[]) try
 			return -1;
 	}
 
-	point2D tile_size { ston<int>(argv[1]), ston<int>(argv[2]) };
-	point2D board_dimensions { ston<int>(argv[3]), ston<int>(argv[4]) };
+	int2 tile_size { ston<int>(argv[1]), ston<int>(argv[2]) };
+	int2 board_dimensions { ston<int>(argv[3]), ston<int>(argv[4]) };
 
 	initializer init;
 	surface board (tile_size * board_dimensions, pixel_format(pixel_format::type::rgb24));
@@ -39,7 +39,7 @@ int main(int argc, char const* argv[]) try
 		class color c(s.format(), rgb_pixel(start * start_ratio + end * end_ratio ));
 		fill(s, c, r);
 
-		r.position -= r.size * point2D::i(); // a bit of a hack
+		r.position -= r.size * int2::i(); // a bit of a hack
 		class color c2(s.format(), rgb_pixel(start * end_ratio + end * start_ratio ));
 		fill(s, c2, r);
 	});

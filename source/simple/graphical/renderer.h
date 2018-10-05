@@ -51,14 +51,14 @@ namespace simple::graphical
 
 		quality_hint default_scale_quality() const noexcept;
 
-		point2D target_size() const noexcept;
+		int2 target_size() const noexcept;
 
 		basic_texture get_texture(const surface&) const;
 		basic_texture get_texture(const surface&, quality_hint scale_quality) const;
-		streaming_texture get_texture(point2D size, pixel_format::type) const;
-		streaming_texture get_texture(point2D size, quality_hint scale_quality, pixel_format::type) const;
-		render_texture get_render_texture(point2D size, pixel_format::type) const;
-		render_texture get_render_texture(point2D size, quality_hint scale_quality,  pixel_format::type) const;
+		streaming_texture get_texture(int2 size, pixel_format::type) const;
+		streaming_texture get_texture(int2 size, quality_hint scale_quality, pixel_format::type) const;
+		render_texture get_render_texture(int2 size, pixel_format::type) const;
+		render_texture get_render_texture(int2 size, quality_hint scale_quality,  pixel_format::type) const;
 		void destroy_texture(const texture&) const;
 
 		blend_mode texture_blend(const texture&) const noexcept;
@@ -68,7 +68,7 @@ namespace simple::graphical
 		uint8_t texture_alpha(const texture&) const noexcept;
 		void texture_alpha(const texture&, uint8_t new_value) const noexcept;
 
-		void update(const texture&, pixel_reader_variant, point2D destination = point2D::zero()) const;
+		void update(const texture&, pixel_reader_variant, int2 destination = int2::zero()) const;
 		void update(const streaming_texture&, std::function<void(pixel_writer_variant)>) const;
 		void update(const streaming_texture&, std::function<void(pixel_writer_variant)>, range2D) const;
 
@@ -79,9 +79,9 @@ namespace simple::graphical
 		bool render(const texture&) const;
 		bool render(const texture&, const range2D& destination) const;
 
-		bool render(const texture_view&, point2D position = point2D::zero()) const;
+		bool render(const texture_view&, int2 position = int2::zero()) const;
 		bool render(const texture_view&, const range2D& destination) const;
-		bool render(const texture_view&, point2D position, double angle) const;
+		bool render(const texture_view&, int2 position, double angle) const;
 		bool render(const texture_view&, const range2D& destination, double angle) const;
 
 		protected:

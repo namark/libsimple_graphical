@@ -27,19 +27,19 @@ namespace simple::graphical
 		surface& operator=(surface&& other) = default;
 
 		explicit surface(const char* filename);
-		surface(point2D size, const pixel_format& format);
-		surface(byte* pixels, point2D size, const pixel_format& format, int pitch = 0);
-		surface(std::unique_ptr<byte[]> pixels, point2D size, const pixel_format& format, int pitch = 0);
-		surface(std::unique_ptr<byte[], void(*)(byte[])> pixels, point2D size, const pixel_format& format, int pitch = 0);
+		surface(int2 size, const pixel_format& format);
+		surface(byte* pixels, int2 size, const pixel_format& format, int pitch = 0);
+		surface(std::unique_ptr<byte[]> pixels, int2 size, const pixel_format& format, int pitch = 0);
+		surface(std::unique_ptr<byte[], void(*)(byte[])> pixels, int2 size, const pixel_format& format, int pitch = 0);
 #if SDL_VERSION_ATLEAST(2,0,5)
-		surface(point2D size, pixel_format::type format);
-		surface(byte* pixels, point2D size, pixel_format::type format, int pitch = 0);
-		surface(std::unique_ptr<byte[]> pixels, point2D size, pixel_format::type format, int pitch = 0);
-		surface(std::unique_ptr<byte[], void(*)(byte[])> pixels, point2D size, pixel_format::type format, int pitch = 0);
+		surface(int2 size, pixel_format::type format);
+		surface(byte* pixels, int2 size, pixel_format::type format, int pitch = 0);
+		surface(std::unique_ptr<byte[]> pixels, int2 size, pixel_format::type format, int pitch = 0);
+		surface(std::unique_ptr<byte[], void(*)(byte[])> pixels, int2 size, pixel_format::type format, int pitch = 0);
 #endif
 
 		const pixel_format& format() const;
-		point2D size() const;
+		int2 size() const;
 
 		blend_mode blend() const noexcept;
 		void blend(blend_mode new_value) const noexcept;
@@ -73,13 +73,13 @@ namespace simple::graphical
 
 		friend bool fill(const surface&, class color);
 		friend bool fill(const surface&, class color, const range2D&);
-		friend bool blit(const surface&, range2D, const surface&, point2D);
+		friend bool blit(const surface&, range2D, const surface&, int2);
 		friend bool blit(const surface&, range2D, const surface&, range2D);
 		friend surface convert(const surface& source, const pixel_format& format);
 		friend class renderer;
 	};
 
-	pixel_writer_variant pixel_writer_from_format(pixel_byte* data, point2D size, int pitch, int bpp);
+	pixel_writer_variant pixel_writer_from_format(pixel_byte* data, int2 size, int pitch, int bpp);
 
 } // namespace simple::graphical
 

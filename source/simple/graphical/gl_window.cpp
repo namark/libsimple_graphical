@@ -53,7 +53,7 @@ void gl_window::config::unregister_window() noexcept
 
 gl_window::config gl_window::global = config{};
 
-gl_window::gl_window(std::string title, point2D size, flags windowflags, point2D position)
+gl_window::gl_window(std::string title, int2 size, flags windowflags, int2 position)
 	: window(title, size, windowflags | window::flags::opengl, position),
 	context(SDL_GL_CreateContext(guts().get()), SDL_GL_DeleteContext)
 {

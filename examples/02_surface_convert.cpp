@@ -7,11 +7,11 @@
 
 using namespace simple::graphical;
 
-point2D randomPoint(point2D max)
+int2 randomPoint(int2 max)
 {
 	static std::minstd_rand rand(std::random_device{}());
 	std::uniform_int_distribution<short> dist;
-	return point2D(dist(rand), dist(rand)) % max;
+	return int2(dist(rand), dist(rand)) % max;
 }
 
 int main(int argc, char const* argv[]) try

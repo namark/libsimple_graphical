@@ -11,7 +11,7 @@ int main() try
 {
 	initializer init;
 
-	software_window win("Borderless window", point2D(640, 480), window::flags::borderless);
+	software_window win("Borderless window", int2(640, 480), window::flags::borderless);
 	fill(win.surface(), win.surface().format().color(0x7700AA_rgb));
 	win.update();
 	SDL_Delay(1313);

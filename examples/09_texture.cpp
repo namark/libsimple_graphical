@@ -33,15 +33,15 @@ int main(int argc, char const* argv[]) try
 		SDL_Delay(1313);
 	}
 
-	auto size = point2D::one() * 300;
+	auto size = int2::one() * 300;
 	auto streaming = renderer.get_texture(size, quality_hint::best, pixel_format::type::abgr8888);
 	renderer.texture_blend(streaming, blend_mode::alpha);
 
 	float blue = 0;
 	auto gradientor_blue = [&blue](auto&& pixels_variant) {
 		auto pixels = std::get<pixel_writer<rgba_pixel, pixel_byte>>(pixels_variant);
-		for(point2D p{}; p < pixels.size(); ++p.y(), p.x() = 0)
-		for(; p < pixels.size(); p += point2D::i())
+		for(int2 p{}; p < pixels.size(); ++p.y(), p.x() = 0)
+		for(; p < pixels.size(); p += int2::i())
 			pixels.set( rgb_pixel(rgb_vector(
 							( (vector2D)p /(vector2D)pixels.size() ).xyz(blue) )), p );
 	};

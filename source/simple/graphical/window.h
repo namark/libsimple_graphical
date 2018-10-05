@@ -54,20 +54,20 @@ namespace simple::graphical
 
 		};
 
-		constexpr static const point2D undefined_position = point2D::one() * SDL_WINDOWPOS_UNDEFINED;
-		constexpr static const point2D center_position = point2D::one() * SDL_WINDOWPOS_CENTERED;
+		constexpr static const int2 undefined_position = int2::one() * SDL_WINDOWPOS_UNDEFINED;
+		constexpr static const int2 center_position = int2::one() * SDL_WINDOWPOS_CENTERED;
 
-		point2D size() const noexcept;
-		void size(point2D value) const noexcept;
+		int2 size() const noexcept;
+		void size(int2 value) const noexcept;
 
 		protected:
 
 		window
 		(
 			std::string title,
-			point2D size,
+			int2 size,
 			flags windowflags = flags::shown,
-			point2D position = undefined_position
+			int2 position = undefined_position
 		);
 
 	};

@@ -26,7 +26,7 @@ namespace simple::graphical
 			vertical = SDL_FLIP_VERTICAL
 		};
 
-		std::tuple<bool, access, point2D, pixel_format::type> info() const noexcept;
+		std::tuple<bool, access, int2, pixel_format::type> info() const noexcept;
 
 		protected:
 		SDL_Texture* guts() const;
@@ -35,7 +35,7 @@ namespace simple::graphical
 		private:
 		SDL_Texture* _guts;
 		explicit texture(SDL_Renderer*, SDL_Surface*);
-		explicit texture(SDL_Renderer*, pixel_format::type, point2D size, access);
+		explicit texture(SDL_Renderer*, pixel_format::type, int2 size, access);
 
 		friend class renderer;
 	};
@@ -85,12 +85,12 @@ namespace simple::graphical
 	{
 		basic_texture texture;
 		// TODO: make invalid ranges flip the texture
-		range2D region = {point2D{0,0}, range2D::limit().upper()};
-		point2D pivot;
+		range2D region = {int2{0,0}, range2D::limit().upper()};
+		int2 pivot;
 		texture::flip_direction flip;
 
-		texture_view(basic_texture, range2D, point2D pivot = point2D::zero(), texture::flip_direction flip = texture::flip_direction::none);
-		texture_view(basic_texture, point2D pivot = point2D::zero(), texture::flip_direction flip = texture::flip_direction::none);
+		texture_view(basic_texture, range2D, int2 pivot = int2::zero(), texture::flip_direction flip = texture::flip_direction::none);
+		texture_view(basic_texture, int2 pivot = int2::zero(), texture::flip_direction flip = texture::flip_direction::none);
 	};
 
 	using ::operator |;

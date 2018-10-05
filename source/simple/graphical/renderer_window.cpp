@@ -6,11 +6,11 @@ using namespace simple::graphical;
 renderer_window::renderer_window
 (
 	std::string title,
-	point2D size,
+	int2 size,
 	flags window_options,
 	renderer::flags renderer_options,
 	quality_hint renderer_scale_quality,
-	point2D position
+	int2 position
 )
 	: window(title, size, window_options, position),
 	_renderer

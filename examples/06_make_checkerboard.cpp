@@ -37,8 +37,8 @@ int main(int argc, char const* argv[]) try
 			return -1;
 	}
 
-	point2D tile_size { ston<int>(argv[1]), ston<int>(argv[2]) };
-	point2D board_dimensions { ston<int>(argv[3]), ston<int>(argv[4]) };
+	int2 tile_size { ston<int>(argv[1]), ston<int>(argv[2]) };
+	int2 board_dimensions { ston<int>(argv[3]), ston<int>(argv[4]) };
 
 	initializer init;
 

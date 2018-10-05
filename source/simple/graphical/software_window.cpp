@@ -2,7 +2,7 @@
 
 using namespace simple::graphical;
 
-software_window::software_window(std::string title, point2D size, flags options, point2D position)
+software_window::software_window(std::string title, int2 size, flags options, int2 position)
 	: window(title, size, options, position),
 	_surface(SDL_GetWindowSurface(guts().get()))
 {}

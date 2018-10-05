@@ -65,9 +65,9 @@ quality_hint renderer::default_scale_quality() const noexcept
 	return _default_scale_quality;
 }
 
-point2D renderer::target_size() const noexcept
+int2 renderer::target_size() const noexcept
 {
-	auto result = -point2D::one();
+	auto result = -int2::one();
 	SDL_GetRendererOutputSize(guts().get(), &result.x(), &result.y());
 	return result;
 }
@@ -84,23 +84,23 @@ basic_texture renderer::get_texture(const surface& surface, quality_hint scale_q
 	return result;
 }
 
-streaming_texture renderer::get_texture(point2D size, pixel_format::type format) const
+streaming_texture renderer::get_texture(int2 size, pixel_format::type format) const
 {
 	return get_texture(size, _default_scale_quality, format);
 }
 
-streaming_texture renderer::get_texture(point2D size, quality_hint scale_quality, pixel_format::type format) const
+streaming_texture renderer::get_texture(int2 size, quality_hint scale_quality, pixel_format::type format) const
 {
 	set_scale_quality_hint(scale_quality);
 	return streaming_texture(guts().get(), format, size, texture::access::streaming);
 }
 
-render_texture renderer::get_render_texture(point2D size, pixel_format::type format) const
+render_texture renderer::get_render_texture(int2 size, pixel_format::type format) const
 {
 	return get_render_texture(size, _default_scale_quality, format);
 }
 
-render_texture renderer::get_render_texture(point2D size, quality_hint scale_quality, pixel_format::type format) const
+render_texture renderer::get_render_texture(int2 size, quality_hint scale_quality, pixel_format::type format) const
 {
 	set_scale_quality_hint(scale_quality);
 	return render_texture(guts().get(), format, size, texture::access::render_target);
@@ -151,7 +151,7 @@ void renderer::texture_alpha(const texture& tex, uint8_t new_value) const noexce
 	SDL_SetTextureAlphaMod(tex.guts(), new_value);
 }
 
-void renderer::update(const texture& tex, pixel_reader_variant data_variant, point2D destination) const
+void renderer::update(const texture& tex, pixel_reader_variant data_variant, int2 destination) const
 {
 	std::visit([&tex, &destination](auto&& data)
 	{
@@ -224,7 +224,7 @@ bool renderer::render(const texture& source, const range2D& destination) const
 	return !sdlcore::utils::check_error(SDL_RenderCopy(guts().get(), source.guts(), NULL, &dr));
 }
 
-static bool render_copy_ex(SDL_Renderer* rend, SDL_Texture* tex, range2D src, range2D dest, double angle, point2D center, texture::flip_direction flip)
+static bool render_copy_ex(SDL_Renderer* rend, SDL_Texture* tex, range2D src, range2D dest, double angle, int2 center, texture::flip_direction flip)
 {
 	auto sr = sdlcore::utils::to_rect<SDL_Rect>(src);
 	auto dr = sdlcore::utils::to_rect<SDL_Rect>(dest);
@@ -233,7 +233,7 @@ static bool render_copy_ex(SDL_Renderer* rend, SDL_Texture* tex, range2D src, ra
 				angle, &c, static_cast<SDL_RendererFlip>(support::to_integer(flip))));
 }
 
-bool renderer::render(const texture_view& source, point2D position) const
+bool renderer::render(const texture_view& source, int2 position) const
 {
 	return render_copy_ex(
 			guts().get(), source.texture.guts(),
@@ -250,7 +250,7 @@ bool renderer::render(const texture_view& source, const range2D& destination) co
 			0, source.pivot,
 			source.flip);
 }
-bool renderer::render(const texture_view& source, point2D position, double angle) const
+bool renderer::render(const texture_view& source, int2 position, double angle) const
 {
 	return render_copy_ex(
 			guts().get(), source.texture.guts(),

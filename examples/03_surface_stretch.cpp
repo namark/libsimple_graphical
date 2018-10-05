@@ -19,7 +19,7 @@ int main(int argc, char const* argv[]) try
 			return -1;
 	}
 
-	point2D size { ston<int>(argv[2]), ston<int>(argv[3]) };
+	int2 size { ston<int>(argv[2]), ston<int>(argv[3]) };
 
 	initializer init;
 

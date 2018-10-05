@@ -42,12 +42,12 @@ namespace simple::graphical
 		return fill(rend, area);
 	}
 
-	bool blit(const surface& source, const surface& destination, point2D position)
+	bool blit(const surface& source, const surface& destination, int2 position)
 	{
 		return blit(source, rect{ source.size() }, destination, position);
 	}
 
-	bool blit(const surface& source, range2D src_range, const surface& destination, point2D position)
+	bool blit(const surface& source, range2D src_range, const surface& destination, int2 position)
 	{
 		auto sr = sdlcore::utils::to_rect<SDL_Rect>(src_range);
 		auto dr = sdlcore::utils::to_rect<SDL_Rect>({position});

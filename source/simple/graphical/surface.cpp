@@ -26,7 +26,7 @@ namespace simple::graphical
 	_format(this->guts()->format)
 	{}
 
-	surface::surface(point2D size, const pixel_format& format)
+	surface::surface(int2 size, const pixel_format& format)
 	: sdl_surface_wrapper
 	(
 		SDL_CreateRGBSurface
@@ -41,7 +41,7 @@ namespace simple::graphical
 	_format(this->guts()->format)
 	{}
 
-	surface::surface(byte* pixels, point2D size, const pixel_format& format, int pitch)
+	surface::surface(byte* pixels, int2 size, const pixel_format& format, int pitch)
 	: sdl_surface_wrapper
 	(
 		SDL_CreateRGBSurfaceFrom
@@ -57,7 +57,7 @@ namespace simple::graphical
 	_format(this->guts()->format)
 	{}
 
-	surface::surface(std::unique_ptr<byte[]> pixels, point2D size, const pixel_format& format, int pitch)
+	surface::surface(std::unique_ptr<byte[]> pixels, int2 size, const pixel_format& format, int pitch)
 	: sdl_surface_wrapper
 	(
 		SDL_CreateRGBSurfaceFrom
@@ -74,7 +74,7 @@ namespace simple::graphical
 	pixels_owner(pixels.release(), [](byte* x){ delete [] x; })
 	{}
 
-	surface::surface(std::unique_ptr<byte[], void(*)(byte*)> pixels, point2D size, const pixel_format& format, int pitch)
+	surface::surface(std::unique_ptr<byte[], void(*)(byte*)> pixels, int2 size, const pixel_format& format, int pitch)
 	: sdl_surface_wrapper
 	(
 		SDL_CreateRGBSurfaceFrom
@@ -93,7 +93,7 @@ namespace simple::graphical
 
 #if SDL_VERSION_ATLEAST(2,0,5)
 
-	surface::surface(point2D size, pixel_format::type format)
+	surface::surface(int2 size, pixel_format::type format)
 	: sdl_surface_wrapper
 	(
 		SDL_CreateRGBSurfaceWithFormat
@@ -108,7 +108,7 @@ namespace simple::graphical
 	_format(this->guts()->format)
 	{}
 
-	surface::surface(byte* pixels, point2D size, pixel_format::type format, int pitch)
+	surface::surface(byte* pixels, int2 size, pixel_format::type format, int pitch)
 	: sdl_surface_wrapper
 	(
 		SDL_CreateRGBSurfaceWithFormatFrom
@@ -124,7 +124,7 @@ namespace simple::graphical
 	_format(this->guts()->format)
 	{}
 
-	surface::surface(std::unique_ptr<byte[]> pixels, point2D size, pixel_format::type format, int pitch)
+	surface::surface(std::unique_ptr<byte[]> pixels, int2 size, pixel_format::type format, int pitch)
 	: sdl_surface_wrapper
 	(
 		SDL_CreateRGBSurfaceWithFormatFrom
@@ -141,7 +141,7 @@ namespace simple::graphical
 	pixels_owner(pixels.release(), [](byte* x){ delete [] x; })
 	{}
 
-	surface::surface(std::unique_ptr<byte[], void(*)(byte*)> pixels, point2D size, pixel_format::type format, int pitch)
+	surface::surface(std::unique_ptr<byte[], void(*)(byte*)> pixels, int2 size, pixel_format::type format, int pitch)
 	: sdl_surface_wrapper
 	(
 		SDL_CreateRGBSurfaceWithFormatFrom
@@ -174,7 +174,7 @@ namespace simple::graphical
 		return _format;
 	}
 
-	point2D surface::size() const
+	int2 surface::size() const
 	{
 		return {guts()->w, guts()->h};
 	}
@@ -219,9 +219,9 @@ namespace simple::graphical
 		SDL_SetSurfaceColorMod(guts().get(), new_value.r(), new_value.g(), new_value.b());
 	}
 
-	pixel_writer_variant pixel_writer_from_format(pixel_byte* data, point2D size, int pitch, int bpp)
+	pixel_writer_variant pixel_writer_from_format(pixel_byte* data, int2 size, int pitch, int bpp)
 	{
-		point2D raw_size = size;
+		int2 raw_size = size;
 		raw_size.x() *= bpp;
 		switch(bpp)
 		{

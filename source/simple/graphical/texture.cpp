@@ -6,12 +6,12 @@
 using namespace simple::graphical;
 using simple::support::to_integer;
 
-std::tuple<bool, texture::access, point2D, pixel_format::type> texture::info() const noexcept
+std::tuple<bool, texture::access, int2, pixel_format::type> texture::info() const noexcept
 {
 	uint32_t format;
 	int acs;
-	std::tuple<bool, access, point2D, pixel_format::type> result;
-	point2D& size = std::get<point2D>(result);
+	std::tuple<bool, access, int2, pixel_format::type> result;
+	int2& size = std::get<int2>(result);
 	std::get<bool>(result) = !sdlcore::utils::check_error(
 			SDL_QueryTexture(_guts, &format, &acs, &size.x(), &size.y()));
 	std::get<pixel_format::type>(result) = static_cast<pixel_format::type>(format);
@@ -28,7 +28,7 @@ texture::texture(SDL_Renderer* rend, SDL_Surface* surface)
 	sdlcore::utils::throw_error(_guts);
 }
 
-texture::texture(SDL_Renderer* rend, pixel_format::type format, point2D size, access acs)
+texture::texture(SDL_Renderer* rend, pixel_format::type format, int2 size, access acs)
 	: _guts(SDL_CreateTexture(rend, to_integer(format), to_integer(acs), size.x(), size.y()))
 {
 	sdlcore::utils::throw_error(_guts);
@@ -60,10 +60,10 @@ render_texture::render_texture(const basic_texture & tex) : texture(tex.guts())
 		throw std::runtime_error("Invalid texture conversion");
 }
 
-texture_view::texture_view(basic_texture tex, range2D region, point2D pivot, texture::flip_direction flip)
+texture_view::texture_view(basic_texture tex, range2D region, int2 pivot, texture::flip_direction flip)
 	: texture(tex), region(region), pivot(pivot), flip(flip)
 {}
 
-texture_view::texture_view(basic_texture tex, point2D pivot, texture::flip_direction flip)
-	: texture_view(tex, {point2D::zero(), std::get<point2D>(tex.info())}, pivot, flip)
+texture_view::texture_view(basic_texture tex, int2 pivot, texture::flip_direction flip)
+	: texture_view(tex, {int2::zero(), std::get<int2>(tex.info())}, pivot, flip)
 {}

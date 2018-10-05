@@ -9,7 +9,7 @@
 namespace simple::graphical
 {
 
-	using point2D = geom::vector<int, 2>;
+	using int2 = geom::vector<int, 2>;
 	using vector2D = geom::vector<float, 2>;
 	using rect = geom::vector_segment<int, 2>;
 	using anchored_rect = geom::anchored_vector_segment<int, 2, float>;
