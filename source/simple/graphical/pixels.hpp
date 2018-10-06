@@ -6,6 +6,7 @@
 
 #include "common_def.h"
 #include "color_vector.hpp"
+#include "simple/support/algorithm.hpp"
 
 namespace simple::graphical
 {
@@ -93,6 +94,41 @@ namespace simple::graphical
 					position.x() *= ratio;
 					memcpy(&(*this)[position], &(pixel), sizeof(Pixel));
 				}
+			}
+
+			template <typename ColorVector = rgba_vector,
+			typename T=Tag, std::enable_if_t<std::is_same_v<T, tag::writer>>* = nullptr>
+			void set(const Pixel& pixel, float2 position) const
+			{
+				set(static_cast<ColorVector>(pixel), position);
+			}
+
+			template <typename ColorVector = rgba_vector,
+			typename T=Tag, std::enable_if_t<std::is_same_v<T, tag::writer>>* = nullptr>
+			void set(const ColorVector& pixel, float2 position) const
+			{
+				auto floor = int2(position);
+				auto fraction = position - float2(floor);
+
+				auto i = float2::zero();
+
+				// 2D specific bound checking
+				auto begin = (floor[0] != size()[0] - 1) ? i.begin() : i.begin() + 1;
+				auto end = (floor[1] != size()[1] - 1) ? i.end() : i.end() - 1;
+
+				do
+				{
+					// the actual magic
+					auto ratio = (float2::one() - fraction)*(float2::one() - i) + fraction * i;
+					auto opacity = std::accumulate(ratio.begin(), ratio.end(), 1.f, std::multiplies{});
+
+					// alpha blending
+					if constexpr (ColorVector::dimensions >= 4)
+						opacity *= pixel.a();
+					ColorVector old_color {get(floor + int2(i))};
+					set(Pixel(pixel * opacity + old_color * (1 - opacity)), floor + int2(i));
+				}
+				while(simple::support::next_number(begin, end) != end);
 			}
 
 			explicit impl(const impl & other)
