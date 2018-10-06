@@ -107,19 +107,5 @@ void set_pixel(const pixel_writer<rgba_pixel, pixel_byte>& pixels, rgba_vector p
 
 void set_subpixel(const pixel_writer<rgba_pixel, pixel_byte>& pixels, rgba_vector pixel, float2 position)
 {
-	auto floor = int2(position);
-	auto fraction = position - float2(floor);
-
-	auto i = float2::zero();
-	auto begin = i.rbegin();
-	auto end = (floor[0] != pixels.size()[0] - 1) ? i.rend() : i.rend() - 1;
-	auto terminator = (floor[1] != pixels.size()[1] - 1) ? end : end - 1;
-	do
-	{
-		auto ratio = (float2::one() - fraction)*(float2::one() - i) + fraction * i;
-		rgba_vector old_color {pixels.get(floor + int2(i))};
-		auto opacity = std::accumulate(ratio.begin(), ratio.end(), 0.f)/ratio.dimensions;
-		pixels.set(rgba_pixel(pixel * opacity + old_color * (1 - opacity)), floor + int2(i));
-	}
-	while(simple::support::next_number(begin, end) != terminator);
+	pixels.set(pixel, position);
 }
