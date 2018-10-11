@@ -45,7 +45,7 @@ namespace simple::graphical
 
 			public:
 			explicit impl(const pixels<RawType>&);
-
+			using pixel_type = Pixel;
 
 			const int2& raw_size() const noexcept { return _raw_size; }
 			int2 size() const noexcept { return _raw_size / int2(ratio, 1); }
