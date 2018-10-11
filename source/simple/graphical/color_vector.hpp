@@ -12,7 +12,7 @@ namespace simple::graphical
 	std::enable_if_t<Size == 3 || Size == 4>* = nullptr>
 	struct color_vector : public geom::vector<Type, Size, RGBA_Order>
 	{
-		using base = geom::vector<Type, Size>;
+		using base = geom::vector<Type, Size, RGBA_Order>;
 		using int_type = uint32_t;
 		constexpr static auto value_limits()
 		{
