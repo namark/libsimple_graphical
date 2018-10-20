@@ -74,7 +74,7 @@ namespace simple::graphical
 			-> std::conditional_t<std::is_same_v<Pixel,RawType>, const Pixel&, Pixel>
 			{
 				if constexpr(std::is_same_v<Pixel,RawType>)
-					return *this[position];
+					return (*this)[position];
 				else
 				{
 					Pixel pixel;
@@ -88,7 +88,7 @@ namespace simple::graphical
 			void set(const Pixel& pixel, int2 position) const
 			{
 				if constexpr(std::is_same_v<Pixel,RawType>)
-					*this[position] = pixel;
+					(*this)[position] = pixel;
 				else
 				{
 					position.x() *= ratio;
