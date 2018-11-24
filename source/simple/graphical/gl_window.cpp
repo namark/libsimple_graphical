@@ -70,3 +70,21 @@ void gl_window::update() noexcept
 {
 	SDL_GL_SwapWindow(guts().get());
 }
+
+auto gl_window::vsync() -> vsync_mode
+{
+	return static_cast<vsync_mode>(SDL_GL_GetSwapInterval());
+}
+
+void gl_window::require_vsync(vsync_mode mode)
+{
+	sdlcore::utils::throw_error(
+		SDL_GL_SetSwapInterval(support::to_integer(mode)) );
+}
+
+bool gl_window::request_vsync(vsync_mode mode)
+{
+	return !sdlcore::utils::check_error(
+		SDL_GL_SetSwapInterval(support::to_integer(mode)) );
+}
+

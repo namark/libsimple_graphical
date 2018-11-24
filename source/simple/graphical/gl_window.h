@@ -61,6 +61,13 @@ namespace simple::graphical
 #endif
 		};
 
+		enum class vsync_mode
+		{
+			disabled = 0,
+			enablded = 1,
+			adaptive = -1
+		};
+
 		using config_data = std::tuple<
 			size_t,       // red
 			size_t,       // green
@@ -112,7 +119,7 @@ namespace simple::graphical
 			}
 
 			template <size_t Index>
-		   	void ensure_requirements()
+			void ensure_requirements()
 			{
 				if(required_attributes.test(Index) && !check<static_cast<attribute>(Index)>())
 					throw std::runtime_error("Requirement not satisfied!");
@@ -252,6 +259,10 @@ namespace simple::graphical
 		~gl_window() noexcept;
 
 		void update() noexcept;
+
+		vsync_mode vsync();
+		bool request_vsync(vsync_mode);
+		void require_vsync(vsync_mode);
 
 	};
 
