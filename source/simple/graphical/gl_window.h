@@ -191,14 +191,16 @@ namespace simple::graphical
 				{
 					case request_info::state::pending:
 						required_attributes.set(support::to_integer(A));
-						return info;
+						break;
 
 					case request_info::state::success:
-						return info;
+						break;
 
 					case request_info::state::failure:
 						throw std::runtime_error("Requirement failed!");
+						break;
 				}
+				return info;
 			}
 
 			template<attribute A>
