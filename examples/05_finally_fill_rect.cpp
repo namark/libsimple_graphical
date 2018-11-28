@@ -34,8 +34,8 @@ int main() try
 	auto light_pink = alpha_layer.format().color({177_u8, 0_u8, 177_u8, 177_u8});
 
 	// fill on surface does not blend, it overwrites
-	fill(alpha_layer, light_blue, anchored_rect{ {100, 300}, center, half2D } );
-	fill(alpha_layer, light_pink, anchored_rect{ {300, 100}, center, half2D } );
+	fill(alpha_layer, light_blue, anchored_rect{ {{100, 300}, center}, half2D } );
+	fill(alpha_layer, light_pink, anchored_rect{ {{300, 100}, center}, half2D } );
 	blit(alpha_layer, win.surface()); // blit blends
 
 	win.update();
@@ -44,8 +44,8 @@ int main() try
 	surface alpha_layer2(alpha_layer.size(), alpha_layer.format());
 
 	// so these will be blended with the previous two
-	fill(alpha_layer2, light_blue, anchored_rect{ {150, 150}, center + 75, half2D } );
-	fill(alpha_layer2, light_pink, anchored_rect{ {150, 150}, center - 75, half2D } );
+	fill(alpha_layer2, light_blue, anchored_rect{ {{150, 150}, center + 75}, half2D } );
+	fill(alpha_layer2, light_pink, anchored_rect{ {{150, 150}, center - 75}, half2D } );
 	blit(alpha_layer2, win.surface()); // thanks to this blit
 
 	win.update();

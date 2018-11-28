@@ -21,14 +21,14 @@ int main() try
 	win.update();
 	SDL_Delay(1313);
 
-	fill(win.renderer(), 0x330077_rgb, anchored_rect{ {300, 300}, center - 75, half2D });
-	fill(win.renderer(), 0x330077_rgb, anchored_rect{ {300, 300}, center + 75, half2D });
+	fill(win.renderer(), 0x330077_rgb, anchored_rect{ {{300, 300}, center - 75}, half2D });
+	fill(win.renderer(), 0x330077_rgb, anchored_rect{ {{300, 300}, center + 75}, half2D });
 	win.update();
 	SDL_Delay(1313);
 
 	win.renderer().blend(blend_mode::alpha);
-	fill(win.renderer(), 0xFFFFFF77_rgba, anchored_rect{ {100, 100}, center - 25, half2D });
-	fill(win.renderer(), 0xFFFFFF77_rgba, anchored_rect{ {100, 100}, center + 25, half2D });
+	fill(win.renderer(), 0xFFFFFF77_rgba, anchored_rect{ {{100, 100}, center - 25}, half2D });
+	fill(win.renderer(), 0xFFFFFF77_rgba, anchored_rect{ {{100, 100}, center + 25}, half2D });
 	win.update();
 	SDL_Delay(1313);
 
