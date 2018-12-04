@@ -13,6 +13,7 @@ int main() try
 
 	software_window win("Borderless window", int2(640, 480), window::flags::borderless);
 	fill(win.surface(), win.surface().format().color(0x7700AA_rgb));
+	std::puts(win.surface().format().name());
 	win.update();
 	SDL_Delay(1313);
 

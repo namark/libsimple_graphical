@@ -73,20 +73,22 @@ namespace simple::graphical
 
 		explicit pixel_format(type t);
 
-		int bits() const;
-		int bytes() const;
-		uint32_t red_mask() const;
-		uint32_t green_mask() const;
-		uint32_t blue_mask() const;
-		uint32_t alpha_mask() const;
+		int bits() const noexcept;
+		int bytes() const noexcept;
+		uint32_t red_mask() const noexcept;
+		uint32_t green_mask() const noexcept;
+		uint32_t blue_mask() const noexcept;
+		uint32_t alpha_mask() const noexcept;
 
-		graphical::color color(const rgb_pixel& values) const;
-		graphical::color color(const rgba_pixel& values) const;
+		graphical::color color(const rgb_pixel& values) const noexcept;
+		graphical::color color(const rgba_pixel& values) const noexcept;
 
-		std::optional<palette_view> palette() const;
+		std::optional<palette_view> palette() const noexcept;
+
+		const char* name() const noexcept;
 
 		private:
-		static void free_pixel_format(const SDL_PixelFormat* one);
+		static void free_pixel_format(const SDL_PixelFormat* one) noexcept;
 
 		friend surface convert(const surface& source, const pixel_format& format);
 	};
