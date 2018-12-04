@@ -7,7 +7,7 @@ size_t palette_view::size() const noexcept
 	return static_cast<size_t>(raw->ncolors);
 }
 
-size_t palette_view::setColors(support::range<const rgba_pixel*> colors, size_t start_index) const noexcept
+size_t palette_view::set_colors(support::range<const rgba_pixel*> colors, size_t start_index) const noexcept
 {
 	auto src_size = colors.end() - colors.begin();
 	auto to_write = std::min<size_t>(size() - start_index, src_size);

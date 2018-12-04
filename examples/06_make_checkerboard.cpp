@@ -45,7 +45,7 @@ int main(int argc, char const* argv[]) try
 	surface board (tile_size * board_dimensions, pixel_format(pixel_format::type::index8));
 	auto palette = board.format().palette();
 	if(palette)
-		palette->setColors(colors);
+		palette->set_colors(colors);
 	fill(board, color(White));
 	checker_up(board, tile_size, color(Black));
 	board.save(argv[5]);

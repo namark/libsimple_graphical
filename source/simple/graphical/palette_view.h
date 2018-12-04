@@ -15,10 +15,10 @@ namespace simple::graphical
 		public:
 		size_t size() const noexcept;
 
-		size_t setColors(range colors, size_t start_index = 0) const noexcept;
+		size_t set_colors(range colors, size_t start_index = 0) const noexcept;
 		template<typename Range>
-		size_t setColors(const Range& colors, size_t start_index = 0) const noexcept
-		{ return setColors({colors.begin(), colors.end()}, start_index); }
+		size_t set_colors(const Range& colors, size_t start_index = 0) const noexcept
+		{ return set_colors({colors.begin(), colors.end()}, start_index); }
 
 		rgba_pixel operator[](size_t index) const noexcept;
 		rgba_pixel at(size_t index) const;
