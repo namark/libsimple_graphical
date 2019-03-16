@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <variant>
+#include <cassert>
 
 #include "common_def.h"
 #include "color_vector.hpp"
@@ -73,6 +74,7 @@ namespace simple::graphical
 			auto get(int2 position) const
 			-> std::conditional_t<std::is_same_v<Pixel,RawType>, const Pixel&, Pixel>
 			{
+				assert(int2::zero() <= position && position < size());
 				if constexpr(std::is_same_v<Pixel,RawType>)
 					return (*this)[position];
 				else
@@ -87,6 +89,7 @@ namespace simple::graphical
 			template<typename T=Tag, std::enable_if_t<std::is_same_v<T, tag::writer>>* = nullptr>
 			void set(const Pixel& pixel, int2 position) const
 			{
+				assert(int2::zero() <= position && position < size());
 				if constexpr(std::is_same_v<Pixel,RawType>)
 					(*this)[position] = pixel;
 				else
@@ -112,7 +115,7 @@ namespace simple::graphical
 
 				auto i = float2::zero();
 
-				// 2D specific bound checking
+				// 2D specific bound checking TODO: try to move this out if possible, make algorithm N dimensional
 				auto begin = (floor[0] != size()[0] - 1) ? i.begin() : i.begin() + 1;
 				auto end = (floor[1] != size()[1] - 1) ? i.end() : i.end() - 1;
 
@@ -122,7 +125,7 @@ namespace simple::graphical
 					auto ratio = (float2::one() - fraction)*(float2::one() - i) + fraction * i;
 					auto opacity = std::accumulate(ratio.begin(), ratio.end(), 1.f, std::multiplies{});
 
-					// alpha blending
+					// alpha blending TODO: move out
 					if constexpr (ColorVector::dimensions >= 4)
 						opacity *= pixel.a();
 					ColorVector old_color {get(floor + int2(i))};
