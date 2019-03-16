@@ -12,6 +12,17 @@ const surface & software_window::surface() const noexcept
 	return _surface;
 }
 
+void software_window::update_surface()
+{
+	_surface = free_surface(SDL_GetWindowSurface(guts().get()));
+}
+
+const surface & software_window::get_surface()
+{
+	update_surface();
+	return surface();
+}
+
 void software_window::update() const
 {
 	sdlcore::utils::throw_error(SDL_UpdateWindowSurface(guts().get()));

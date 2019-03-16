@@ -19,6 +19,11 @@ namespace simple::graphical
 
 		const graphical::surface & surface() const noexcept;
 
+		// ugh, surface becomes invalid after window resize >.<
+		// so here is some API for that
+		void update_surface();
+		const graphical::surface & get_surface();
+
 		void update() const;
 		bool refresh() const noexcept;
 
@@ -30,7 +35,7 @@ namespace simple::graphical
 			free_surface(SDL_Surface* guts);
 		};
 
-		const free_surface _surface;
+		free_surface _surface;
 	};
 
 } // namespace simple::graphical
