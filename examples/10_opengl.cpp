@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cerrno>
 
 #if ENABLE_OPENGL_EXAMPLES
 

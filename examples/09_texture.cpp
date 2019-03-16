@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cerrno>
 
 #include "simple/graphical/initializer.h"
 #include "simple/graphical/renderer_window.h"

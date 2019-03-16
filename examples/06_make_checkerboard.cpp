@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cerrno>
 #include <array>
 
 #include "simple/graphical/initializer.h"

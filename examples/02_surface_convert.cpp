@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cerrno>
 #include <random>
 
 #include "simple/graphical/initializer.h"

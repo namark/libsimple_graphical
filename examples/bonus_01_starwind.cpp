@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cerrno>
 #include <vector>
 #include <random>
 #include <chrono>
