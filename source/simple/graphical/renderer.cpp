@@ -106,9 +106,12 @@ render_texture renderer::get_render_texture(int2 size, quality_hint scale_qualit
 	return render_texture(guts().get(), format, size, texture::access::render_target);
 }
 
-void renderer::destroy_texture(const texture& tex) const
+void renderer::destroy_texture(texture& tex) const
 {
 	SDL_DestroyTexture(tex.guts());
+#ifndef NDEBUG
+	tex._guts = nullptr;
+#endif
 }
 
 blend_mode renderer::texture_blend(const texture& tex) const noexcept

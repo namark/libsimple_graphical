@@ -59,7 +59,7 @@ namespace simple::graphical
 		streaming_texture get_texture(int2 size, quality_hint scale_quality, pixel_format::type) const;
 		render_texture get_render_texture(int2 size, pixel_format::type) const;
 		render_texture get_render_texture(int2 size, quality_hint scale_quality,  pixel_format::type) const;
-		void destroy_texture(const texture&) const;
+		void destroy_texture(texture&) const;
 
 		blend_mode texture_blend(const texture&) const noexcept;
 		void texture_blend(const texture&, blend_mode new_value) const noexcept;

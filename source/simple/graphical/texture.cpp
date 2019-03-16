@@ -1,3 +1,4 @@
+#include <cassert>
 #include "common_def.h"
 #include "simple/support/enum.hpp"
 #include "simple/sdlcore/utils.hpp"
@@ -36,6 +37,7 @@ texture::texture(SDL_Renderer* rend, pixel_format::type format, int2 size, acces
 
 SDL_Texture* texture::guts() const
 {
+	assert(_guts && "simple::graphical::texture must not be null");
 	return _guts;
 }
 
