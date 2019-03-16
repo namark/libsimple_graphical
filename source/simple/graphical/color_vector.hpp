@@ -24,13 +24,20 @@ namespace simple::graphical
 
 		using base::base;
 
+		constexpr explicit color_vector(const base& other)
+		: base(other)
+		{}
+
+		// TODO: account for RGBA_Order in these conversions
+
 		template<size_t S = Size, std::enable_if_t<S == 4>* = nullptr>
 		constexpr color_vector(const color_vector<Type, 3>& other)
 		: color_vector(other.r(), other.g(), other.b(), value_limits().upper())
 		{}
 
-		constexpr explicit color_vector(const base& other)
-		: base(other)
+		template<size_t S = Size, std::enable_if_t<S == 3>* = nullptr>
+		explicit constexpr color_vector(const color_vector<Type, 4>& other)
+		: color_vector(other.r(), other.g(), other.b())
 		{}
 
 		template<typename OtherType, typename T = Type,
@@ -50,6 +57,14 @@ namespace simple::graphical
 			using std::round;
 			for(size_t i = 0; i < Size; ++i)
 				(*this)[i] = std::round(other[i] * static_cast<OtherType>(value_limits().upper()));
+		}
+
+		// geting around 1 user defined conversion limit here
+		template<typename OtherType, size_t OtherSize, typename OtherOrder, typename T = Type, size_t S = Size,
+		std::enable_if_t<!std::is_same_v<T, OtherType> && S != OtherSize>* = nullptr>
+		explicit constexpr color_vector(const color_vector<OtherType, OtherSize, OtherOrder>& other)
+			: color_vector(static_cast<color_vector<OtherType, Size, RGBA_Order>>(other))
+		{
 		}
 
 		constexpr Type& r() { return this->x(); }
