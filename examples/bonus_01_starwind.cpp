@@ -63,7 +63,8 @@ int main(int argc, char const* argv[]) try
 
 	software_window win("Starwind", {600,600}, window::flags::borderless);
 	auto pixels = std::get<pixel_writer<rgba_pixel, pixel_byte>>(win.surface().pixels());
-	auto half_size = float2(win.surface().size()) / 2;
+	auto win_size = float2(win.surface().size());
+	auto half_size = win_size / 2;
 
 	for
 	(
@@ -81,8 +82,9 @@ int main(int argc, char const* argv[]) try
 			if(star.z() < .01f)
 				star.z() = 1.f;
 			const auto perspective_star = star.xy() / star.z();
-			if(-float2::one() < perspective_star && perspective_star < float2::one())
-				pixel_setter(pixels, color * (-star.z() + 1), (half_size + perspective_star * (half_size)));
+			const auto position = half_size + perspective_star * half_size;
+			if(float2::zero() <= position && position < win_size)
+				pixel_setter(pixels, color * (-star.z() + 1), position);
 		}
 		win.update();
 	}
@@ -103,7 +105,7 @@ catch(...)
 
 void set_pixel(const pixel_writer<rgba_pixel, pixel_byte>& pixels, rgba_vector pixel, float2 position)
 {
-	pixels.set(rgba_pixel(pixel), int2(position) );
+	pixels.set(rgba_pixel(pixel), int2(position));
 }
 
 void set_subpixel(const pixel_writer<rgba_pixel, pixel_byte>& pixels, rgba_vector pixel, float2 position)
