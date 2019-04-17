@@ -59,6 +59,18 @@ namespace simple::graphical
 
 		int2 size() const noexcept;
 		void size(int2 value) const noexcept;
+		int2 position() const noexcept;
+		void position(int2 value) const noexcept;
+
+#if SDL_VERSION_ATLEAST(2,0,5)
+		float opacity() const noexcept;
+		void opacity(float value) const noexcept;
+#endif
+
+		void show() const noexcept;
+		void hide() const noexcept;
+		void minimize() const noexcept;
+		void restore() const noexcept;
 
 		protected:
 
