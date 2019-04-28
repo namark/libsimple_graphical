@@ -80,8 +80,11 @@ namespace simple::graphical
 		uint32_t blue_mask() const noexcept;
 		uint32_t alpha_mask() const noexcept;
 
-		graphical::color color(const rgb_pixel& values) const noexcept;
-		graphical::color color(const rgba_pixel& values) const noexcept;
+		graphical::color color(const rgb_pixel&) const noexcept;
+		graphical::color color(const rgba_pixel&) const noexcept;
+
+		rgb_pixel rgb(const graphical::color&) const noexcept;
+		rgba_pixel rgba(const graphical::color&) const noexcept;
 
 		std::optional<palette_view> palette() const noexcept;
 

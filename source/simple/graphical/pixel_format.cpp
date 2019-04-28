@@ -37,6 +37,21 @@ namespace simple::graphical
 		return graphical::color(SDL_MapRGBA(guts().get(), values.r(), values.g(), values.b(), values.a()));
 	}
 
+	rgb_pixel pixel_format::rgb(const graphical::color& color) const noexcept
+	{
+		rgb_pixel rgb;
+		SDL_GetRGB(static_cast<uint32_t>(color), guts().get(), &rgb.r(), &rgb.g(), &rgb.b());
+		return rgb;
+	}
+
+	rgba_pixel pixel_format::rgba(const graphical::color& color) const noexcept
+	{
+		rgba_pixel rgba;
+		SDL_GetRGBA(static_cast<uint32_t>(color), guts().get(),
+			&rgba.r(), &rgba.g(), &rgba.b(), &rgba.a());
+		return rgba;
+	}
+
 	std::optional<palette_view> pixel_format::palette() const noexcept
 	{
 		auto palette_ptr = guts()->palette;
