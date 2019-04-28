@@ -86,6 +86,15 @@ namespace simple::graphical
 				}
 			}
 
+			template<typename T=Tag, typename UInt,
+			std::enable_if_t<std::is_same_v<T, tag::writer> && std::is_unsigned_v<UInt>>* = nullptr>
+			void set(const UInt& pixel, int2 position) const
+			{
+				assert(int2::zero() <= position && position < size());
+				position.x() *= ratio;
+				memcpy(&(*this)[position], &(pixel), sizeof(Pixel));
+			}
+
 			template<typename T=Tag, std::enable_if_t<std::is_same_v<T, tag::writer>>* = nullptr>
 			void set(const Pixel& pixel, int2 position) const
 			{
