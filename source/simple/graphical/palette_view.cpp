@@ -1,4 +1,5 @@
 #include "palette_view.h"
+#include "cassert"
 
 using namespace simple::graphical;
 
@@ -22,6 +23,20 @@ size_t palette_view::set_colors(support::range<const rgba_pixel*> colors, size_t
 	}
 	SDL_SetPaletteColors(raw, raw->colors, 0, 1); // let SDL know changes occurred
 	return to_write;
+}
+
+rgba_pixel palette_view::operator[](size_t index) const noexcept
+{
+	assert(index < size_t(raw->ncolors));
+	SDL_Color color = raw->colors[index];
+	return {color.r, color.g, color.b, color.a};
+}
+
+rgba_pixel palette_view::at(size_t index) const
+{
+	if(index >= size_t(raw->ncolors))
+		throw std::out_of_range("simple::graphical::palette_view::at: index out of range.");
+	return (*this)[index];
 }
 
 palette_view::palette_view(SDL_Palette* raw) noexcept : raw(raw) {}
