@@ -3,7 +3,7 @@
 
 #include "simple/graphical/initializer.h"
 #include "simple/graphical/software_window.h"
-#include "simple/graphical/algorithm.h"
+#include "simple/graphical/algorithm.hpp"
 
 using namespace simple::graphical;
 

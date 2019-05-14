@@ -4,7 +4,7 @@
 #include "simple/graphical/initializer.h"
 #include "simple/graphical/renderer_window.h"
 #include "simple/graphical/renderer.h"
-#include "simple/graphical/algorithm.h"
+#include "simple/graphical/algorithm.hpp"
 
 using namespace simple::graphical;
 using namespace color_literals;
@@ -15,7 +15,7 @@ int main() try
 {
 	initializer init;
 
-	renderer_window win("Borderless window", int2(600, 600), window::flags::borderless);
+	renderer_window win("Renderer", int2(600, 600), window::flags::borderless);
 	auto center = win.renderer().target_size() / 2;
 
 	fill(win.renderer(), 0x7700AA_rgb);

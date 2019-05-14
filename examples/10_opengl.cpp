@@ -5,7 +5,7 @@
 
 #include "simple/graphical/initializer.h"
 #include "simple/graphical/gl_window.h"
-#include "simple/graphical/algorithm.h"
+#include "simple/graphical/algorithm.hpp"
 
 #include <GL/gl.h>
 

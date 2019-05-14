@@ -3,7 +3,7 @@
 #include <array>
 
 #include "simple/graphical/initializer.h"
-#include "simple/graphical/algorithm.h"
+#include "simple/graphical/algorithm.hpp"
 #include "simple/support/misc.hpp"
 
 #include "common.h"

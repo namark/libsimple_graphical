@@ -1,4 +1,5 @@
 #include "graphical/algorithm.h"
+#include "graphical/algorithm.hpp"
 #include "graphical/color.h"
 #include "graphical/color_vector.hpp"
 #include "graphical/common_def.h"
