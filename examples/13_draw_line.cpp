@@ -12,6 +12,7 @@ using namespace simple::graphical;
 using namespace color_literals;
 using namespace std::chrono_literals;
 using simple::geom::vector;
+using simple::support::min_element;
 using rgb_pixels = pixel_writer<rgb_pixel, surface::byte>;
 
 const auto tau = 2*std::acos(-1);
@@ -41,9 +42,10 @@ int main(int argc, char const* argv[]) try
 	surface canvas (logical_size, pixel_format(pixel_format::type::rgb24));
 	auto pixels = std::get<rgb_pixels>(canvas.pixels());
 
+	const int half_size = min_element(win.size())/2 - 1; // -1 becaus we set the enpoints
 	const float offset = tau/10;
-	const float radius = 199 / zoom;
-	const auto position = float2::one(199) / zoom;
+	const float radius = half_size / zoom;
+	const auto position = float2::one(half_size) / zoom;
 	const auto color = 0xffffff_rgb;
 	for(float i = 0; i < tau; i += tau*0.001f)
 	{
@@ -62,10 +64,10 @@ int main(int argc, char const* argv[]) try
 		floating_vector_line({position + from_angle(angle) * radius/2, position + from_angle(angle) * radius}, pixels, color);
 
 		angle -= offset;
-		bresenham_line({int2(floor(position + from_angle(angle) * radius/2)), int2(floor(position + from_angle(angle) * radius))}, pixels, color);
+		bresenham_line({int2(round(position + from_angle(angle) * radius/2)), int2(round(position + from_angle(angle) * radius))}, pixels, color);
 
 		angle -= offset;
-		xiaolin_wu_line({int2(floor(position + from_angle(angle) * radius/2)), int2(floor(position + from_angle(angle) * radius))}, pixels, color);
+		xiaolin_wu_line({int2(round(position + from_angle(angle) * radius/2)), int2(round(position + from_angle(angle) * radius))}, pixels, color);
 
 
 		blit(canvas, win.surface(), rect{win.surface().size()});
@@ -132,18 +134,18 @@ void integer_vector_line(const line<float2>& line, rgb_pixels pixels, rgb_pixel 
 	setter(vector_line(line, setter).end());
 }
 
-void bresenham_line(line<int2> l, rgb_pixels pixels, rgb_pixel value)
+void bresenham_line(line<int2> line, rgb_pixels pixels, rgb_pixel value)
 {
-	bresenham_line(l, [&pixels, &value](int2 position)
+	bresenham_line(line, [&pixels, &value](int2 position)
 	{
 		pixels.set(value, position);
 	});
 }
 
-void xiaolin_wu_line(line<int2> l, rgb_pixels pixels, rgb_pixel value)
+void xiaolin_wu_line(line<int2> line, rgb_pixels pixels, rgb_pixel value)
 {
 	using rational = rational<int>;
-	bresenham_line(l, [&pixels, &value](int2 position, rational ratio)
+	bresenham_line(line, [&pixels, &value](int2 position, rational ratio)
 	{
 		const auto blended = value.mutant_clone([&ratio](auto coord)
 			{ return rgb_pixel::coordinate_type((int)coord * ratio); });
