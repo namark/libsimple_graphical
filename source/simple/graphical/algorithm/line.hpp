@@ -1,48 +1,12 @@
 #ifndef SIMPLE_GRAPHICAL_LINE_HPP
 #define SIMPLE_GRAPHICAL_LINE_HPP
 
-#include "simple/support/array.hpp"
+#include "simple/support/rational.hpp"
 
 namespace simple::graphical
 {
 
-	// TODO: find and use a proper rational type
-	template <typename Int>
-	struct rational : public simple::support::array<Int, 2>
-	{
-		enum
-		{
-			numerator,
-			denominator
-		};
-
-		constexpr rational& operator*=(const Int& value)
-		{
-			(*this)[numerator] *= value;
-			return *this;
-		}
-
-		constexpr operator Int()
-		{
-			return (*this)[numerator] / (*this)[denominator];
-		}
-	};
-
-	template <typename Int>
-	constexpr rational<Int> operator*(rational<Int> ratio, const Int& value)
-	{
-		ratio *= value;
-		return ratio;
-	}
-
-	template <typename Int>
-	constexpr rational<Int> operator*(const Int& value, rational<Int> ratio)
-	{
-		ratio *= value;
-		return ratio;
-	}
-
-	template <typename Int> rational(Int, Int) -> rational<Int>;
+	using simple::support::rational;
 
 	template<typename Vector>
 	struct line
