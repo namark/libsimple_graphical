@@ -74,4 +74,21 @@ namespace simple::graphical
 		SDL_RestoreWindow(guts().get());
 	}
 
+	void window::raise() const noexcept
+	{
+		// SDL_PumpEvents();
+		SDL_RaiseWindow(guts().get());
+	}
+
+	void window::maximize() const noexcept
+	{
+		// SDL_PumpEvents();
+		SDL_MaximizeWindow(guts().get());
+	}
+
+	uint32_t window::id() const noexcept
+	{
+		return SDL_GetWindowID(guts().get());
+	}
+
 } // namespace simple::graphical

@@ -71,6 +71,10 @@ namespace simple::graphical
 		void hide() const noexcept;
 		void minimize() const noexcept;
 		void restore() const noexcept;
+		void raise() const noexcept;
+		void maximize() const noexcept;
+
+		uint32_t id() const noexcept;
 
 		protected:
 
