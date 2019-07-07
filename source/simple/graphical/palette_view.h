@@ -15,6 +15,7 @@ namespace simple::graphical
 		public:
 		size_t size() const noexcept;
 
+		void set_color(size_t index, rgba_pixel) const noexcept;
 		size_t set_colors(range colors, size_t start_index = 0) const noexcept;
 		template<typename Range>
 		size_t set_colors(const Range& colors, size_t start_index = 0) const noexcept
