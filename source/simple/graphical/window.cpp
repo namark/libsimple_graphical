@@ -3,6 +3,7 @@
 #include "simple/support/function_utils.hpp"
 #include "simple/support/enum.hpp"
 #include "window.h"
+#include "surface.h"
 
 namespace simple::graphical
 {
@@ -44,6 +45,22 @@ namespace simple::graphical
 	{
 		SDL_SetWindowPosition(guts().get(), value.x(), value.y());
 	}
+
+	void window::icon(const surface& icon) const noexcept
+	{
+		SDL_SetWindowIcon(guts().get(), icon.guts().get());
+	}
+
+	void window::title(const char* title) const noexcept
+	{
+		SDL_SetWindowTitle(guts().get(), title);
+	}
+
+	const char* window::title() const noexcept
+	{
+		return SDL_GetWindowTitle(guts().get());
+	}
+
 
 #if SDL_VERSION_ATLEAST(2,0,5)
 	float window::opacity() const noexcept

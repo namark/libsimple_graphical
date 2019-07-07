@@ -15,9 +15,10 @@ namespace simple::graphical
 
 	using sdl_window_wrapper = sdlcore::utils::object_wrapper<SDL_Window>;
 
+	class surface;
+
 	class window : public sdl_window_wrapper
 	{
-
 		public:
 
 		enum class flags : uint32_t
@@ -61,6 +62,9 @@ namespace simple::graphical
 		void size(int2 value) const noexcept;
 		int2 position() const noexcept;
 		void position(int2 value) const noexcept;
+		void icon(const surface&) const noexcept;
+		void title(const char*) const noexcept;
+		const char* title() const noexcept;
 
 #if SDL_VERSION_ATLEAST(2,0,5)
 		float opacity() const noexcept;

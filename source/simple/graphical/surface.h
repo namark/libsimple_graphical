@@ -77,6 +77,7 @@ namespace simple::graphical
 		friend bool blit(const surface&, range2D, const surface&, range2D);
 		friend surface convert(const surface& source, const pixel_format& format);
 		friend class renderer;
+		friend class window;
 	};
 
 	pixel_writer_variant pixel_writer_from_format(pixel_byte* data, int2 size, int pitch, int bpp);
