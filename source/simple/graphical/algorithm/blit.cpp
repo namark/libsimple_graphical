@@ -3,6 +3,9 @@
 #include "../surface.h"
 
 // TODO: implement blit combination that SDL doesn't support
+// scaled blit between two indexed surfaces with same palette
+// scaled blit from indexed surface to rgb surface
+// ...
 
 namespace simple::graphical
 {
