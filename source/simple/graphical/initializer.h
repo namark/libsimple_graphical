@@ -7,8 +7,26 @@ namespace simple::graphical
 
 	class initializer : private sdlcore::initializer
 	{
+		private:
+
+		class screensaver_control
+		{
+			public:
+			screensaver_control() noexcept;
+			~screensaver_control() noexcept;
+			void keep_alive() noexcept;
+			void release_one() noexcept;
+			void release_all() noexcept;
+			[[nodiscard]] bool kept_alive() const noexcept;
+			[[nodiscard]] static bool global_kept_alive() noexcept;
+			private:
+			int keep_alive_count;
+			static int global_keep_alive_count;
+		};
+
 		public:
 		initializer();
+		screensaver_control screensaver;
 	};
 
 } // namespace simple::graphical
