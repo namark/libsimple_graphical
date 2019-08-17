@@ -64,7 +64,7 @@ namespace simple::graphical
 		enum class vsync_mode
 		{
 			disabled = 0,
-			enablded = 1,
+			enabled = 1,
 			adaptive = -1
 		};
 
