@@ -97,7 +97,7 @@ int main(int argc, char** argv) try
 	}
 
 	// if you skip this, selection sort has no effect
-    std::shuffle(points.begin(), points.end(), std::mt19937(std::random_device{}()));
+	std::shuffle(points.begin(), points.end(), std::mt19937(std::random_device{}()));
 
 	selection_sort(points.begin(), points.end());
 
