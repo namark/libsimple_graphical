@@ -79,7 +79,7 @@ int main(int argc, char** argv) try
 	}
 	else
 	{
-		std::puts("Running in fullscreen mode. This could take a logn time...\n");
+		std::puts("Running in fullscreen mode. This could take a long time...\n");
 		flags = flags | window::flags::fullscreen_desktop;
 	}
 
