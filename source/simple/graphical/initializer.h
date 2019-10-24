@@ -2,6 +2,8 @@
 #define SIMPLE_GRAPHICAL_INITIALIZER_H
 #include "simple/sdlcore/initializer.h"
 
+#include "display.h"
+
 namespace simple::graphical
 {
 
@@ -27,6 +29,7 @@ namespace simple::graphical
 		public:
 		initializer();
 		screensaver_control screensaver;
+		display_list displays() const noexcept;
 	};
 
 } // namespace simple::graphical

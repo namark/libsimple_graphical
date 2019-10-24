@@ -1,9 +1,7 @@
 #ifndef SIMPLE_GRAPHICAL_PIXEL_FORMAT_H
 #define SIMPLE_GRAPHICAL_PIXEL_FORMAT_H
 
-#include <memory>
 #include <optional>
-#include <SDL2/SDL.h>
 #include "simple/sdlcore/utils.hpp"
 #include "color.h"
 #include "palette_view.h"
@@ -95,6 +93,8 @@ namespace simple::graphical
 
 		friend surface convert(const surface& source, const pixel_format& format);
 	};
+
+	const char* to_string(pixel_format::type) noexcept;
 
 } // namespace simple::graphical
 

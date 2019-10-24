@@ -2,6 +2,7 @@
 #include "graphical/color.h"
 #include "graphical/color_vector.hpp"
 #include "graphical/common_def.h"
+#include "graphical/display.h"
 #include "graphical/gl_window.h"
 #include "graphical/initializer.h"
 #include "graphical/palette_view.h"

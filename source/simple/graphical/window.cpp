@@ -108,4 +108,11 @@ namespace simple::graphical
 		return SDL_GetWindowID(guts().get());
 	}
 
+	display window::display() const
+	{
+		int index = SDL_GetWindowDisplayIndex(guts().get());
+		sdlcore::utils::throw_error(index < 0);
+		return graphical::display(index);
+	}
+
 } // namespace simple::graphical

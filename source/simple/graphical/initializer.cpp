@@ -66,3 +66,11 @@ initializer::screensaver_control::~screensaver_control() noexcept
 
 initializer::initializer() : sdlcore::initializer(sdlcore::system_flag::video), screensaver()
 {}
+
+display_list initializer::displays() const noexcept
+{
+		auto count = SDL_GetNumVideoDisplays();
+		if(count < 0)
+			count = 0;
+		return display_list(count);
+}

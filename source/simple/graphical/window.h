@@ -9,6 +9,7 @@
 #include "simple/sdlcore/utils.hpp"
 
 #include "common_def.h"
+#include "display.h"
 
 namespace simple::graphical
 {
@@ -79,6 +80,8 @@ namespace simple::graphical
 		void maximize() const noexcept;
 
 		uint32_t id() const noexcept;
+
+		graphical::display display() const;
 
 		protected:
 

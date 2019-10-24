@@ -1,4 +1,5 @@
 #include <type_traits>
+#include "simple/support/enum.hpp"
 
 #include "pixel_format.h"
 #include "palette_view.h"
@@ -61,6 +62,11 @@ namespace simple::graphical
 	const char* pixel_format::name() const noexcept
 	{
 		return SDL_GetPixelFormatName(guts()->format);
+	}
+
+	const char* to_string(pixel_format::type type) noexcept
+	{
+		return SDL_GetPixelFormatName(support::to_integer(type));
 	}
 
 } // namespace simple::graphical
