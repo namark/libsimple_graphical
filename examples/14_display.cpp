@@ -21,7 +21,7 @@ int main() try
 
 	for(auto&& display : graphics.displays())
 	{
-		std::cout << "---Didplay---"<< '\n';
+		std::cout << "Didplay: " << display.name() << '\n';
 		for(auto&& mode : display.modes())
 		{
 			std::cout << mode;

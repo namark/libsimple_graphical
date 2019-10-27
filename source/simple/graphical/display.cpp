@@ -134,6 +134,13 @@ namespace simple::graphical
 		return mode_list(count, index);
 	}
 
+	const char* display::name() const
+	{
+		auto result = SDL_GetDisplayName(index);
+		sdlcore::utils::throw_error(result);
+		return result;
+	}
+
 	display::display(int index) noexcept : index(index)
 	{ }
 

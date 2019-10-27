@@ -58,7 +58,7 @@ namespace simple::graphical
 		{
 			pixel_format::type format;
 			int2 size;
-			int refresh_rate;
+			int refresh_rate; // TODO: make this double
 			bool operator==(const mode&) const noexcept;
 			bool operator!=(const mode&) const noexcept;
 		};
@@ -82,6 +82,7 @@ namespace simple::graphical
 		mode current_mode() const;
 		mode initial_mode() const;
 		mode_list modes() const noexcept;
+		const char* name() const;
 		// TODO: bounds, DPI
 		private:
 		explicit display(int) noexcept;
