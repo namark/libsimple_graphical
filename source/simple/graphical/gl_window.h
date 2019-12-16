@@ -262,9 +262,11 @@ namespace simple::graphical
 
 		void update() noexcept;
 
-		vsync_mode vsync();
-		bool request_vsync(vsync_mode);
+		vsync_mode vsync() const noexcept;
+		bool request_vsync(vsync_mode) noexcept;
 		void require_vsync(vsync_mode);
+
+		int2 framebuffer_size() const noexcept;
 
 	};
 

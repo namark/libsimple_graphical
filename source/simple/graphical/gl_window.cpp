@@ -71,7 +71,7 @@ void gl_window::update() noexcept
 	SDL_GL_SwapWindow(guts().get());
 }
 
-auto gl_window::vsync() -> vsync_mode
+auto gl_window::vsync() const noexcept -> vsync_mode
 {
 	return static_cast<vsync_mode>(SDL_GL_GetSwapInterval());
 }
@@ -82,9 +82,16 @@ void gl_window::require_vsync(vsync_mode mode)
 		SDL_GL_SetSwapInterval(support::to_integer(mode)) );
 }
 
-bool gl_window::request_vsync(vsync_mode mode)
+bool gl_window::request_vsync(vsync_mode mode) noexcept
 {
 	return !sdlcore::utils::check_error(
 		SDL_GL_SetSwapInterval(support::to_integer(mode)) );
+}
+
+int2 gl_window::framebuffer_size() const noexcept
+{
+	int2 size;
+	SDL_GL_GetDrawableSize(guts().get(), &size.x(), &size.y());
+	return size;
 }
 
