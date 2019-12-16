@@ -10,6 +10,7 @@ bool initializer::screensaver_control::global_kept_alive() noexcept
 }
 
 initializer::screensaver_control::screensaver_control() noexcept
+	: keep_alive_count(0)
 {
 	if(!global_kept_alive() && !SDL_IsScreenSaverEnabled())
 	{
