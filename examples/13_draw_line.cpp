@@ -99,7 +99,7 @@ void floating_dda_line(const line<float2>& line, rgb_pixels pixels, rgb_pixel va
 	const auto tail = dda_line(line, setter);
 	const auto tail_size = tail.end() - tail.begin();
 	rgba_vector end_value = rgb_vector(value);
-	end_value.a() = std::sqrt(tail_size.quadrance()/2);
+	end_value.a() = std::clamp(tail_size.length(),0.f,1.f);
 	pixels.set(end_value, tail.end());
 }
 
@@ -121,7 +121,7 @@ void floating_vector_line(const line<float2>& line, rgb_pixels pixels, rgb_pixel
 	const auto tail = vector_line(line, setter);
 	const auto tail_size = tail.end() - tail.begin();
 	rgba_vector end_value = rgb_vector(value);
-	end_value.a() = std::sqrt(tail_size.quadrance()/2);
+	end_value.a() = std::clamp(tail_size.length(),0.f,1.f);
 	pixels.set(end_value, tail.end());
 }
 

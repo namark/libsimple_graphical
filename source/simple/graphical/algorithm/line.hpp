@@ -2,6 +2,7 @@
 #define SIMPLE_GRAPHICAL_LINE_HPP
 
 #include "simple/support/rational.hpp"
+#include "simple/support/algorithm.hpp"
 
 namespace simple::graphical
 {
@@ -18,7 +19,7 @@ namespace simple::graphical
 		const Vector& end() const { return vertex[1]; }
 	};
 
-	// + looks good with square pixels
+	// + floating endpoints
 	// - slow?
 	// - two dimensional
 	template <typename Float2, typename Setter>
@@ -51,20 +52,17 @@ namespace simple::graphical
 		return {last, l.end()};
 	}
 
-	// + generic: dimension agnostic, pixel distance adjustable
-	// - looks bad with square pixels, ideally should set a radius
+	// + floating endpoints
+	// + tail preserves direction
+	// + generic: dimension agnostic, unit/step adjustable
 	// - slow?
-	template <typename Vector, typename Distance, typename Setter>
-	line<Vector> vector_line(line<Vector> l, Distance pixel_distance, const Setter& setter)
+	template <typename Vector, typename Setter>
+	line<Vector> vector_line(line<Vector> l, Vector unit, const Setter& setter)
 	{
-		// TODO: for shorter than one pixel lines, just return them as a tail;
-		// if possible using existing calculation without a separate conditional,
-		// that might as well go outside the function
 		const auto diff = l.end() - l.begin();
-		const auto unit = diff/diff.length() * pixel_distance;
-		const auto abs_diff_0 = abs(diff[0]);
+		const auto abs_diff = abs(diff);
 		auto last = l.begin();
-		for(auto i = Vector{}; abs(i[0]) < abs_diff_0; i += unit)
+		for(auto i = Vector{}; !(abs(i) >= abs_diff); i += unit)
 		{
 			last = l.begin() + i;
 			setter(last);
@@ -73,9 +71,22 @@ namespace simple::graphical
 	};
 
 	template <typename Vector, typename Setter>
+	line<Vector> vector_line(line<Vector> l, typename Vector::coordinate_type pixel_distance, const Setter& setter)
+	{
+		const auto diff = l.end() - l.begin();
+		const auto unit = diff/diff.length() * pixel_distance;
+		return vector_line(l, unit, setter);
+	};
+
+	template <typename Vector, typename Setter>
 	line<Vector> vector_line(line<Vector> l, const Setter& setter)
 	{
-		return vector_line(l, 1, setter);
+		const auto diff = l.end() - l.begin();
+		const auto abs_diff = abs(diff);
+		if(abs_diff < Vector::one())
+			return l;
+		const auto unit = diff / *support::max_element(abs_diff);
+		return vector_line(l, unit, setter);
 	};
 
 	// + fast(?), integer arithmetic only
