@@ -41,9 +41,9 @@ namespace simple::graphical
 			bgr565 = SDL_PIXELFORMAT_BGR565,
 			rgb24 = SDL_PIXELFORMAT_RGB24,
 			bgr24 = SDL_PIXELFORMAT_BGR24,
-			rgb888 = SDL_PIXELFORMAT_RGB888,
+			xrgb8888 = SDL_PIXELFORMAT_RGB888,
 			rgbx8888 = SDL_PIXELFORMAT_RGBX8888,
-			bgr888 = SDL_PIXELFORMAT_BGR888,
+			xbgr8888 = SDL_PIXELFORMAT_BGR888,
 			bgrx8888 = SDL_PIXELFORMAT_BGRX8888,
 			argb8888 = SDL_PIXELFORMAT_ARGB8888,
 			rgba8888 = SDL_PIXELFORMAT_RGBA8888,
@@ -51,10 +51,23 @@ namespace simple::graphical
 			bgra8888 = SDL_PIXELFORMAT_BGRA8888,
 			argb2101010 = SDL_PIXELFORMAT_ARGB2101010,
 #if SDL_VERSION_ATLEAST(2,0,5)
-			rgba32 = SDL_PIXELFORMAT_RGBA32, // alias for RGBA byte array of color data, for the current platform
-			argb32 = SDL_PIXELFORMAT_ARGB32, // alias for ARGB byte array of color data, for the current platform
-			bgra32 = SDL_PIXELFORMAT_BGRA32, // alias for BGRA byte array of color data, for the current platform
-			abgr32 = SDL_PIXELFORMAT_ABGR32, // alias for ABGR byte array of color data, for the current platform
+			rgba32 = SDL_PIXELFORMAT_RGBA32,
+			argb32 = SDL_PIXELFORMAT_ARGB32,
+			bgra32 = SDL_PIXELFORMAT_BGRA32,
+			abgr32 = SDL_PIXELFORMAT_ABGR32,
+#else
+	#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+			rgba32 = SDL_PIXELFORMAT_RGBA8888,
+			argb32 = SDL_PIXELFORMAT_ARGB8888,
+			bgra32 = SDL_PIXELFORMAT_BGRA8888,
+			abgr32 = SDL_PIXELFORMAT_ABGR8888,
+	#else
+			rgba32 = SDL_PIXELFORMAT_ABGR8888,
+			argb32 = SDL_PIXELFORMAT_BGRA8888,
+			bgra32 = SDL_PIXELFORMAT_ARGB8888,
+			abgr32 = SDL_PIXELFORMAT_RGBA8888,
+	#endif
+
 #endif
 			yv12 = SDL_PIXELFORMAT_YV12, // planar mode: Y + V + U (3 planes)
 			iyuv = SDL_PIXELFORMAT_IYUV, // planar mode: Y + U + V (3 planes)
