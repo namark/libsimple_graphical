@@ -8,7 +8,7 @@
 
 #include "common_def.h"
 #include "pixel_format.h"
-#include "pixels.hpp"
+#include "pixels.h"
 #include "color.h"
 
 namespace simple::graphical

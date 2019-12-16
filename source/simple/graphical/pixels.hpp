@@ -1,243 +1,211 @@
-#ifndef SIMPLE_GRAPHICAL_PIXELS_H
-#define SIMPLE_GRAPHICAL_PIXELS_H
+#ifndef SIMPLE_GRAPHICAL_PIXELS_HPP
+#define SIMPLE_GRAPHICAL_PIXELS_HPP
+#include "pixels.h"
 
 #include <memory>
-#include <variant>
 #include <cassert>
 
 #include "common_def.h"
 #include "color_vector.hpp"
 #include "simple/support/algorithm.hpp"
+#include "color.h"
 
 namespace simple::graphical
 {
 
-	template<typename RawType>
-	class pixels
-	{
-		// TODO: SDL independent pixels owner, compatible with the views below
-	};
-
 	namespace pixel_view_details
 	{
 
-		class tag
+		template<typename T, typename P, typename R>
+		const int2& impl<T,P,R>::raw_size() const noexcept
+		{ return _raw_size; }
+		template<typename T, typename P, typename R>
+		int2 impl<T,P,R>::size() const noexcept
+		{ return _raw_size / ratio; }
+
+		template<typename T, typename P, typename R>
+		auto impl<T,P,R>::row(int index) const noexcept
+		-> raw_type*
+		{ return reinterpret_cast<raw_type*>(_raw + index * _pitch); }
+
+		template<typename T, typename P, typename R>
+		auto impl<T,P,R>::row_offset(raw_type* row, int offset) const noexcept
+		-> raw_type*
+		{ return reinterpret_cast<raw_type*>(
+			reinterpret_cast<byte_type*>(row) +
+			offset * _pitch
+		); }
+
+		template<typename T, typename P, typename R>
+		auto impl<T,P,R>::next_row(raw_type* row) const noexcept
+		-> raw_type*
+		{ return reinterpret_cast<raw_type*>(
+			reinterpret_cast<byte_type*>(row) + _pitch
+		); }
+
+		template<typename T, typename P, typename R>
+		auto impl<T,P,R>::prev_row(raw_type* row) const noexcept
+		-> raw_type*
+		{ return reinterpret_cast<raw_type*>(
+			reinterpret_cast<byte_type*>(row) - _pitch
+		); }
+
+		template<typename T, typename P, typename R>
+		auto impl<T,P,R>::operator[](int2 position) const noexcept
+		-> raw_type&
 		{
-			public:
-			class pixel_view {};
-			class reader : public pixel_view {};
-			class writer : public pixel_view {};
+			assert(int2::zero() <= position && position < raw_size());
+			return row(position.y())[position.x()];
+		}
 
-			template <typename Tag>
-			static constexpr bool valid = std::is_base_of_v<pixel_view, Tag>;
-
-			template<typename T, typename RT>
-			using select_raw_type = std::conditional_t<std::is_same_v<T, tag::reader>, std::add_const_t<RT>, RT>;
-
-		};
-
-		template<typename Tag, typename Pixel, typename RawType,
-		std::enable_if_t<sizeof(Pixel) % sizeof(RawType) == 0>* = nullptr,
-		std::enable_if_t<tag::valid<Tag>>* = nullptr>
-		class impl
+		template<typename T, typename P, typename R>
+		auto impl<T,P,R>::raw_range() const noexcept
+		-> simple::support::range<raw_type*>
 		{
+			return {row(), row_offset(row(),raw_size().y())};
+		}
 
-			constexpr static int ratio = sizeof(Pixel) / sizeof(RawType);
-
-			public:
-			explicit impl(const pixels<RawType>&);
-			using pixel_type = Pixel;
-
-			const int2& raw_size() const noexcept { return _raw_size; }
-			int2 size() const noexcept { return _raw_size / int2(ratio, 1); }
-
-			// TODO: proper row_iterator interface?
-			template<typename T = Tag, typename RT = tag::select_raw_type<T, RawType>>
-			RT* row(int index = 0) const noexcept
-			{ return reinterpret_cast<RT*>(_raw + index * _pitch); }
-
-			template<typename T = Tag, typename RT = tag::select_raw_type<T, RawType>>
-			RT* row_offset(RawType* row, int offset = 1) const noexcept
-			{ return reinterpret_cast<RT*>(reinterpret_cast<pixel_byte*>(row) + offset * _pitch); }
-
-			template<typename T = Tag, typename RT = tag::select_raw_type<T, RawType>>
-			RT* next_row(RT* row) const noexcept
-			{ return reinterpret_cast<RT*>(reinterpret_cast<pixel_byte*>(row) + _pitch); }
-
-			template<typename T = Tag, typename RT = tag::select_raw_type<T, RawType>>
-			RT* prev_row(RawType* row) const noexcept
-			{ return reinterpret_cast<RT*>(reinterpret_cast<pixel_byte*>(row) - _pitch); }
-
-			RawType& operator[](int2 position) const noexcept
-			{ return row(position.y())[position.x()]; }
-
-			auto get(int2 position) const
-			-> std::conditional_t<std::is_same_v<Pixel,RawType>, const Pixel&, Pixel>
+		template<typename T, typename Pixel, typename RawType>
+		auto impl<T,Pixel,RawType>::get(int2 position) const
+		-> std::conditional_t<std::is_same_v<Pixel,RawType>, const Pixel&, Pixel>
+		{
+			assert(int2::zero() <= position && position < size());
+			if constexpr(std::is_same_v<Pixel,RawType>)
+				return (*this)[position];
+			else
 			{
-				assert(int2::zero() <= position && position < size());
-				if constexpr(std::is_same_v<Pixel,RawType>)
-					return (*this)[position];
-				else
-				{
-					Pixel pixel;
-					position.x() *= ratio;
-					memcpy(&pixel, &(*this)[position], sizeof(Pixel));
-					return pixel;
-				}
+				Pixel pixel;
+				position.x() *= ratio.x();
+				memcpy(&pixel, &(*this)[position], sizeof(Pixel));
+				return pixel;
 			}
+		}
 
-			template<typename T=Tag, typename UInt,
-			std::enable_if_t<std::is_same_v<T, tag::writer> && std::is_unsigned_v<UInt>>* = nullptr>
-			void set(const UInt& pixel, int2 position) const
-			{
-				assert(int2::zero() <= position && position < size());
-				position.x() *= ratio;
-				memcpy(&(*this)[position], &(pixel), sizeof(Pixel));
-			}
+		template<typename T, typename P, typename R>
+		impl<T,P,R>::impl(const impl & other, range2D range) :
+			_raw(reinterpret_cast<tag::select_raw_type<T,pixel_byte>*>(other.row())
+				+ to_index(range.lower(), other.pitch())),
+			_raw_size((range.upper() - range.lower())*ratio),
+			_pitch(other.pitch())
+		{}
 
-			template<typename T=Tag, std::enable_if_t<std::is_same_v<T, tag::writer>>* = nullptr>
-			void set(const Pixel& pixel, int2 position) const
-			{
-				assert(int2::zero() <= position && position < size());
-				if constexpr(std::is_same_v<Pixel,RawType>)
-					(*this)[position] = pixel;
-				else
-				{
-					position.x() *= ratio;
-					memcpy(&(*this)[position], &(pixel), sizeof(Pixel));
-				}
-			}
+		template<typename T, typename P, typename R>
+		int impl<T,P,R>::pitch() const noexcept { return _pitch; }
 
-			template <typename ColorVector = rgba_vector,
-			typename T=Tag, std::enable_if_t<std::is_same_v<T, tag::writer>>* = nullptr>
-			void set(const Pixel& pixel, float2 position) const
-			{
-				set(static_cast<ColorVector>(pixel), position);
-			}
+		template<typename T, typename P, typename RawType>
+		impl<T,P,RawType>::impl(tag::select_raw_type<T,pixel_byte>* target, int2 size, int pitch)
+		: _raw(target), _raw_size(size), _pitch(pitch ? pitch : size.x() * sizeof(RawType))
+		{}
 
-			template <typename ColorVector = rgba_vector,
-			typename T=Tag, std::enable_if_t<std::is_same_v<T, tag::writer>>* = nullptr>
-			void set(const ColorVector& pixel, float2 position) const
-			{
-				auto floor = int2(position);
-				auto fraction = position - float2(floor);
+		template<typename T, typename P, typename R>
+		template<typename OtherTag>
+		impl<T,P,R>::impl(const impl<OtherTag, P, R> & other) :
+			_raw(reinterpret_cast<tag::select_raw_type<T,pixel_byte>*>(other.row())),
+			_raw_size(other.raw_size()),
+			_pitch(other.pitch())
+		{}
 
-				auto i = float2::zero();
+		template<typename T, typename P, typename R>
+		template<typename OtherTag>
+		impl<T,P,R>::impl(const impl<OtherTag, P, R> & other, range2D range) :
+			_raw(reinterpret_cast<tag::select_raw_type<T,pixel_byte>*>(other.row())
+				+ to_index(range.lower(), other.pitch())),
+			_raw_size((range.upper() - range.lower())*ratio),
+			_pitch(other.pitch())
+		{}
 
-				// 2D specific bound checking TODO: try to move this out if possible, make algorithm N dimensional
-				auto begin = (floor[0] != size()[0] - 1) ? i.begin() : i.begin() + 1;
-				auto end = (floor[1] != size()[1] - 1) ? i.end() : i.end() - 1;
-
-				do
-				{
-					// the actual magic
-					auto ratio = (float2::one() - fraction)*(float2::one() - i) + fraction * i;
-					auto opacity = std::accumulate(ratio.begin(), ratio.end(), 1.f, std::multiplies{});
-
-					// alpha blending TODO: move out
-					if constexpr (ColorVector::dimensions >= 4)
-						opacity *= pixel.a();
-					ColorVector old_color {get(floor + int2(i))};
-					set(Pixel(pixel * opacity + old_color * (1 - opacity)), floor + int2(i));
-				}
-				while(simple::support::next_number(begin, end) != end);
-			}
-
-			explicit impl(const impl & other)
-			: _raw(other._raw), _raw_size(other._raw_size), _pitch(other._pitch)
-			{}
-
-			explicit impl(const impl & other, range2D range) :
-				_raw(other._raw + to_index(range.lower(), other._pitch)),
-				_raw_size(range.upper() - range.lower()),
-				_pitch(other._pitch)
-			{}
-
-			protected:
-
-			impl(pixel_byte* target, int2 size, int pitch = 0)
-			: _raw(target), _raw_size(size), _pitch(pitch ? pitch : size.x() * sizeof(RawType))
-			{}
-
-			int pitch() const noexcept { return _pitch; }
-
-			template<typename OtherTag>
-			explicit impl(const impl<OtherTag, Pixel, RawType> & other)
-			: _raw(other._raw), _raw_size(other._raw_size), _pitch(other._pitch)
-			{}
-
-			template<typename OtherTag>
-			explicit impl(const impl<OtherTag, Pixel, RawType> & other, range2D range) :
-				_raw(other._raw + to_index(range.lower(), other._pitch)),
-				_raw_size(range.upper() - range.lower()),
-				_pitch(other._pitch)
-			{}
-
-			private:
-			pixel_byte* _raw;
-			int2 _raw_size;
-			int _pitch;
-
-			static int to_index(const int2& position, int pitch) noexcept
-			{
-				return position.x() * sizeof(RawType) + position.y() * pitch;
-			}
-
-		};
+		template<typename T, typename P, typename RawType>
+		int impl<T,P,RawType>::to_index(const int2& position, int pitch) noexcept
+		{
+			return position.x() * ratio.x() * sizeof(RawType) + position.y() * pitch;
+		}
 
 	} // namespace pixel_view_details
 
 
-	// TODO: add more pixel types, for all the crazy pixel formats SDL supports
-	template<template<typename Pixel, typename Raw = Pixel> typename PixelView>
-	using pixel_view_variant = std::variant<
-		PixelView<pixel_byte>, // 1 bytes per pixel
-		PixelView<uint16_t, pixel_byte>, // 2 bytes per pixel
-		PixelView<rgb_pixel, pixel_byte>, // 3 bytes per pixel
-		PixelView<rgba_pixel, pixel_byte> // 4 bytes per pixel
-	>;
+	template <typename P, typename R>
+	pixel_writer<P,R>::pixel_writer(pixel_byte* target, int2 size, int pitch)
+		: impl(target, size, pitch)
+	{}
 
-	class pixel_format;
-
-	template<typename Pixel, typename RawType = Pixel>
-	class pixel_writer :
-		public pixel_view_details::impl<pixel_view_details::tag::writer, Pixel, RawType>
+	template<typename Pixel, typename RawType>
+	void pixel_writer<Pixel,RawType>::set(const Pixel& pixel, int2 position) const
 	{
-		public:
-		using impl = pixel_view_details::impl<pixel_view_details::tag::writer, Pixel, RawType>;
-		using impl::impl;
+		assert(int2::zero() <= position && position < this->size());
+		if constexpr(std::is_same_v<Pixel,RawType>)
+			(*this)[position] = pixel;
+		else
+		{
+			position.x() *= pixel_writer::ratio.x();
+			memcpy(&(*this)[position], &(pixel), sizeof(Pixel));
+		}
+	}
 
-		private:
-		pixel_writer(pixel_byte* target, int2 size, int pitch = 0)
-			: impl(target, size, pitch)
-		{}
-		friend pixel_view_variant<pixel_writer> pixel_writer_from_format(pixel_byte*, int2, int, int bpp);
-	};
-
-	template<typename Pixel, typename RawType = Pixel>
-	class pixel_reader :
-		public pixel_view_details::impl<pixel_view_details::tag::reader, Pixel, RawType>
+	template<typename Pixel, typename R>
+	template <typename ColorVector>
+	void pixel_writer<Pixel,R>::set(const Pixel& pixel, float2 position) const
 	{
-		public:
-		using impl = pixel_view_details::impl<pixel_view_details::tag::reader, Pixel, RawType>;
-		using impl::impl;
+		set(static_cast<ColorVector>(pixel), position);
+	}
 
-		explicit pixel_reader
-		(const pixel_writer<Pixel, RawType> & other)
-		: impl(other)
-		{}
+	template<typename Pixel, typename R>
+	template <typename ColorVector>
+	void pixel_writer<Pixel,R>::set(const ColorVector& pixel, float2 position) const
+	{
+		auto floor = int2(position);
+		auto fraction = position - float2(floor);
 
-		explicit pixel_reader
-		(
-		 	const pixel_writer<Pixel, RawType> & other,
-			range2D range
-		)
-		: impl(other, range)
-		{}
-	};
+		auto i = float2::zero();
 
-	using pixel_reader_variant = pixel_view_variant<pixel_reader>;
-	using pixel_writer_variant = pixel_view_variant<pixel_writer>;
+		// 2D specific bound checking TODO: try to move this out if possible, make algorithm N dimensional
+		auto begin = (floor[0] != this->size()[0] - 1) ? i.begin() : i.begin() + 1;
+		auto end = (floor[1] != this->size()[1] - 1) ? i.end() : i.end() - 1;
+
+		do
+		{
+			// the actual magic
+			auto ratio = (float2::one() - fraction)*(float2::one() - i) + fraction * i;
+			auto opacity = std::accumulate(ratio.begin(), ratio.end(), 1.f, std::multiplies{});
+
+			// alpha blending TODO: move out
+			if constexpr (ColorVector::dimensions >= 4)
+				opacity *= pixel.a();
+			assert(opacity >= 0.f && opacity <= 1.f);
+			ColorVector old_color {this->get(floor + int2(i))};
+			// TODO: consider skipping setting pixels with opacity 0(or near 0)
+			// can help performace in cases where the pixel lies on a single row
+			// line drawing, scan conversion
+			// need to benchmark
+			// this can be done at a lower level of set or in a "blender", by checking if what we set is equivalent to what we got, once alpha blending is moved out
+			set(Pixel(pixel * opacity + old_color * (1 - opacity)), floor + int2(i));
+		}
+		while(simple::support::next_number(begin, end) != end);
+	}
+
+	template<typename Pixel, typename R>
+	void pixel_writer<Pixel,R>::set(const color& pixel, int2 position) const
+	{
+		assert(int2::zero() <= position && position < this->size());
+		static_assert( sizeof(color) >= sizeof(Pixel), "color should fill a pixel, at least" );
+		position.x() *= pixel_writer::ratio.x();
+		memcpy(&(*this)[position], &(pixel), sizeof(Pixel));
+	}
+
+	template <typename Pixel, typename RawType>
+	pixel_reader<Pixel,RawType>::pixel_reader
+	(const pixel_writer<Pixel, RawType> & other)
+	: impl(other)
+	{}
+
+	template <typename Pixel, typename RawType>
+	pixel_reader<Pixel,RawType>::pixel_reader
+	(
+		const pixel_writer<Pixel, RawType> & other,
+		range2D range
+	)
+	: impl(other, range)
+	{}
+
 
 } // namespace simple::graphical
 

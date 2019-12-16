@@ -7,7 +7,7 @@
 #include "common_def.h"
 #include "color.h"
 #include "texture.h"
-#include "pixels.hpp"
+#include "pixels.h"
 
 namespace simple::graphical
 {
