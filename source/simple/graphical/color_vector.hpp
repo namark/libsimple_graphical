@@ -24,6 +24,10 @@ namespace simple::graphical
 
 		using base::base;
 
+		// TODO: workaround for clang bug, that prevents inheriting the default constructor
+		// https://bugs.llvm.org/show_bug.cgi?id=38673
+		constexpr explicit color_vector() = default;
+
 		constexpr explicit color_vector(const base& other)
 		: base(other)
 		{}
