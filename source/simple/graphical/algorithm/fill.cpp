@@ -50,20 +50,9 @@ namespace simple::graphical
 		}, writer);
 	}
 
-
-	// hmmm... is this guaranteed to work?
-	[[maybe_unused]]
-	void instantiate_fill(pixel_writer_variant var)
-	{
-		std::visit([](auto writer)
-		{
-			fill(writer, typename decltype(writer)::pixel_type{});
-		}, var);
-	}
-
-	// template void fill<rgba_pixel, pixel_byte>(const pixel_writer<rgba_pixel, pixel_byte>&, rgba_pixel);
-	// template void fill<rgb_pixel, pixel_byte>(const pixel_writer<rgb_pixel, pixel_byte>&, rgb_pixel);
-	// template void fill<uint16_t, pixel_byte>(const pixel_writer<uint16_t, pixel_byte>&, uint16_t);
-	// template void fill<pixel_byte, pixel_byte>(const pixel_writer<pixel_byte, pixel_byte>&, pixel_byte);
+	template void fill<rgba_pixel, pixel_byte>(const pixel_writer<rgba_pixel, pixel_byte>&, rgba_pixel);
+	template void fill<rgb_pixel, pixel_byte>(const pixel_writer<rgb_pixel, pixel_byte>&, rgb_pixel);
+	template void fill<uint16_t, pixel_byte>(const pixel_writer<uint16_t, pixel_byte>&, uint16_t);
+	template void fill<pixel_byte, pixel_byte>(const pixel_writer<pixel_byte, pixel_byte>&, pixel_byte);
 
 } // namespace simple::graphical
