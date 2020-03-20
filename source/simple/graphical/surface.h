@@ -26,6 +26,7 @@ namespace simple::graphical
 		surface(surface&& other) = default;
 		surface& operator=(surface&& other) = default;
 
+		// TODO: constructor with a pallete
 		explicit surface(const char* filename);
 		surface(int2 size, const pixel_format& format);
 		surface(byte* pixels, int2 size, const pixel_format& format, int pitch = 0);
