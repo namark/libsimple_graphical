@@ -73,6 +73,12 @@ namespace simple::graphical
 			auto get(int2 position) const
 			-> std::conditional_t<std::is_same_v<Pixel,RawType>, const Pixel&, Pixel>;
 
+			template <typename ColorVector = rgba_vector>
+			Pixel get(float2 position) const;
+
+			template <typename ColorVector = rgba_vector>
+			Pixel get(float2 position, range2D spread) const;
+
 			impl(const impl & other, range2D range);
 
 			int pitch() const noexcept;
@@ -123,6 +129,12 @@ namespace simple::graphical
 
 		template <typename ColorVector = rgba_vector>
 		void set(const ColorVector& pixel, float2 position) const;
+
+		template <typename ColorVector = rgba_vector>
+		void set(const Pixel& pixel, float2 position, range2D spread) const;
+
+		template <typename ColorVector = rgba_vector>
+		void set(const ColorVector& pixel, float2 position, range2D spread) const;
 
 		void set(const color& pixel, int2 position) const;
 

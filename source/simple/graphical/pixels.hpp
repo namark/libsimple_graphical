@@ -7,11 +7,39 @@
 
 #include "common_def.h"
 #include "color_vector.hpp"
-#include "simple/support/algorithm.hpp"
+#include "simple/geom/algorithm.hpp"
 #include "color.h"
 
 namespace simple::graphical
 {
+
+	template <typename Function>
+	void quantize(range2D spread, float2 sample, Function&& quant_handler)
+	{
+		// this is bilinear interpolation essentially,
+		// but should work as is for N-linear case, right?
+
+		assert(spread.upper() - spread.lower() <= int2::one(2));
+
+		auto floor_ = floor(sample);
+		auto table = sample - floor_;
+
+		geom::loop(spread, int2::one(),
+			[&](auto i)
+		{
+			float2 mask = float2(i);
+			// and doesn't have to be linear either,
+			// with another customization point here maybe?
+			auto ratio = table * mask +
+				(float2::one() - table)*(float2::one() - mask);
+			auto magnitude = std::accumulate(
+				ratio.begin(), ratio.end(),
+				1.f, std::multiplies{} );
+
+			std::invoke(std::forward<Function>(quant_handler),
+					floor_ + mask, magnitude);
+		});
+	}
 
 	namespace pixel_view_details
 	{
@@ -79,6 +107,33 @@ namespace simple::graphical
 				memcpy(&pixel, &(*this)[position], sizeof(Pixel));
 				return pixel;
 			}
+		}
+
+		template<typename T, typename Pixel, typename RawType>
+		template <typename ColorVector>
+		Pixel impl<T,Pixel,RawType>::get(float2 position) const
+		{
+			const float2 size(this->size());
+			assert(float2::one(-1) < position && position < size);
+
+			return get(position,
+			{
+				int2(position < float2::zero()),
+				int2::one(2) - int2(position > (size - 1))
+			});
+		}
+
+		template<typename T, typename Pixel, typename RawType>
+		template <typename ColorVector>
+		Pixel impl<T,Pixel,RawType>::get(float2 position, range2D spread) const
+		{
+			auto sample = ColorVector{};
+			quantize(spread, position, [&](auto position, auto area)
+			{
+				sample += static_cast<ColorVector>(get(int2(position))) * area;
+			});
+
+			return static_cast<Pixel>(sample);
 		}
 
 		template<typename T, typename P, typename R>
@@ -150,36 +205,39 @@ namespace simple::graphical
 
 	template<typename Pixel, typename R>
 	template <typename ColorVector>
+	void pixel_writer<Pixel,R>::set(const Pixel& pixel, float2 position, range2D spread) const
+	{
+		set(static_cast<ColorVector>(pixel), position, spread);
+	}
+
+	template<typename Pixel, typename R>
+	template <typename ColorVector>
 	void pixel_writer<Pixel,R>::set(const ColorVector& pixel, float2 position) const
 	{
-		auto floor = int2(position);
-		auto fraction = position - float2(floor);
+		const float2 size(this->size());
+		assert(float2::one(-1) < position && position < size);
 
-		auto i = float2::zero();
-
-		// 2D specific bound checking TODO: try to move this out if possible, make algorithm N dimensional
-		auto begin = (floor[0] != this->size()[0] - 1) ? i.begin() : i.begin() + 1;
-		auto end = (floor[1] != this->size()[1] - 1) ? i.end() : i.end() - 1;
-
-		do
+		set(pixel, position,
 		{
-			// the actual magic
-			auto ratio = (float2::one() - fraction)*(float2::one() - i) + fraction * i;
-			auto opacity = std::accumulate(ratio.begin(), ratio.end(), 1.f, std::multiplies{});
+			int2(position < float2::zero()),
+			int2::one(2) - int2(position > (size - 1))
+		});
+	}
 
-			// alpha blending TODO: move out
+	template<typename Pixel, typename R>
+	template <typename ColorVector>
+	void pixel_writer<Pixel,R>::set(const ColorVector& pixel, float2 position, range2D spread) const
+	{
+		quantize(spread, position, [&](auto position, auto opacity)
+		{
+			// blending TODO: parameterize?
 			if constexpr (ColorVector::dimensions >= 4)
 				opacity *= pixel.a();
 			assert(opacity >= 0.f && opacity <= 1.f);
-			ColorVector old_color {this->get(floor + int2(i))};
+			ColorVector old_color {this->get(int2(position))};
 			// TODO: consider skipping setting pixels with opacity 0(or near 0)
-			// can help performace in cases where the pixel lies on a single row
-			// line drawing, scan conversion
-			// need to benchmark
-			// this can be done at a lower level of set or in a "blender", by checking if what we set is equivalent to what we got, once alpha blending is moved out
-			set(Pixel(pixel * opacity + old_color * (1 - opacity)), floor + int2(i));
-		}
-		while(simple::support::next_number(begin, end) != end);
+			set(Pixel(pixel * opacity + old_color * (1 - opacity)), int2(position));
+		});
 	}
 
 	template<typename Pixel, typename R>
@@ -205,6 +263,34 @@ namespace simple::graphical
 	)
 	: impl(other, range)
 	{}
+
+/* i like this code, but it's inferior ;_;
+	template<typename Pixel, typename R>
+	template <typename ColorVector>
+	void pixel_writer<Pixel,R>::set(const ColorVector& pixel, float2 position) const
+	{
+		auto floor = int2(position);
+		auto fraction = position - float2(floor);
+
+		auto i = float2::zero();
+
+		auto begin = (floor[0] != this->size()[0] - 1) ? i.begin() : i.begin() + 1;
+		auto end = (floor[1] != this->size()[1] - 1) ? i.end() : i.end() - 1;
+
+		do
+		{
+			auto ratio = (float2::one() - fraction)*(float2::one() - i) + fraction * i;
+			auto opacity = std::accumulate(ratio.begin(), ratio.end(), 1.f, std::multiplies{});
+
+			if constexpr (ColorVector::dimensions >= 4)
+				opacity *= pixel.a();
+			assert(opacity >= 0.f && opacity <= 1.f);
+			ColorVector old_color {this->get(floor + int2(i))};
+			set(Pixel(pixel * opacity + old_color * (1 - opacity)), floor + int2(i));
+		}
+		while(simple::support::next_number(begin, end) != end);
+	}
+*/
 
 
 } // namespace simple::graphical
