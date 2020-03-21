@@ -1,3 +1,6 @@
+#ifndef SIMPLE_GRAPHICAL_ALGORITHM_FILL_HPP
+#define SIMPLE_GRAPHICAL_ALGORITHM_FILL_HPP
+
 #include "fill.h"
 
 namespace simple::graphical
@@ -17,3 +20,5 @@ namespace simple::graphical
 	}
 
 } // namespace simple::graphical
+
+#endif /* end of include guard */
