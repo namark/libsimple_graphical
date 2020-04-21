@@ -116,7 +116,7 @@ namespace simple::graphical
 			const float2 size(this->size());
 			assert(float2::one(-1) < position && position < size);
 
-			return get(position,
+			return get<ColorVector>(position,
 			{
 				int2(position < float2::zero()),
 				int2::one(2) - int2(position > (size - 1))
@@ -217,7 +217,7 @@ namespace simple::graphical
 		const float2 size(this->size());
 		assert(float2::one(-1) < position && position < size);
 
-		set(pixel, position,
+		set<ColorVector>(pixel, position,
 		{
 			int2(position < float2::zero()),
 			int2::one(2) - int2(position > (size - 1))

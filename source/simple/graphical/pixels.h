@@ -21,6 +21,21 @@ namespace simple::graphical
 	namespace pixel_view_details
 	{
 
+		template <typename Pixel>
+		struct pixel_fraction { using type = rgba_vector; };
+
+		template <>
+		struct pixel_fraction<rgba_pixel> { using type = rgba_vector; };
+		template <>
+		struct pixel_fraction<rgb_pixel> { using type = rgb_vector; };
+		template <>
+		struct pixel_fraction<uint16_t> { using type = float; };
+		template <>
+		struct pixel_fraction<pixel_byte> { using type = float; };
+
+		template <typename Pixel>
+		using pixel_fraction_t = typename pixel_fraction<Pixel>::type;
+
 		class tag
 		{
 			public:
@@ -73,10 +88,10 @@ namespace simple::graphical
 			auto get(int2 position) const
 			-> std::conditional_t<std::is_same_v<Pixel,RawType>, const Pixel&, Pixel>;
 
-			template <typename ColorVector = rgba_vector>
+			template <typename ColorVector = pixel_fraction_t<Pixel>>
 			Pixel get(float2 position) const;
 
-			template <typename ColorVector = rgba_vector>
+			template <typename ColorVector = pixel_fraction_t<Pixel>>
 			Pixel get(float2 position, range2D spread) const;
 
 			impl(const impl & other, range2D range);

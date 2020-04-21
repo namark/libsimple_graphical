@@ -37,6 +37,7 @@ SIMPLE_GRAPHICAL_PIXEL_WRITER_SET(rgba_pixel, rgb_vector, rgb_vector)
 SIMPLE_GRAPHICAL_PIXEL_WRITER_SET(rgba_pixel, rgba_vector, rgba_vector)
 SIMPLE_GRAPHICAL_PIXEL_WRITER_SET(rgba_pixel, rgb_vector, rgba_pixel)
 SIMPLE_GRAPHICAL_PIXEL_WRITER_SET(rgba_pixel, rgba_vector, rgba_pixel)
+// SIMPLE_GRAPHICAL_PIXEL_WRITER_SET(uint16_t, float, uint16_t) // TODO
 #undef SIMPLE_GRAPHICAL_PIXEL_WRITER_SET
 using namespace pixel_view_details;
 #define SIMPLE_GRAPHICAL_PIXEL_VIEW_GET(Tag,Pixel,Vector) \
@@ -46,10 +47,14 @@ SIMPLE_GRAPHICAL_PIXEL_VIEW_GET(tag::reader, rgb_pixel, rgb_vector)
 SIMPLE_GRAPHICAL_PIXEL_VIEW_GET(tag::reader, rgb_pixel, rgba_vector)
 SIMPLE_GRAPHICAL_PIXEL_VIEW_GET(tag::reader, rgba_pixel, rgb_vector)
 SIMPLE_GRAPHICAL_PIXEL_VIEW_GET(tag::reader, rgba_pixel, rgba_vector)
+SIMPLE_GRAPHICAL_PIXEL_VIEW_GET(tag::reader, uint16_t, float)
+SIMPLE_GRAPHICAL_PIXEL_VIEW_GET(tag::reader, pixel_byte, float)
 SIMPLE_GRAPHICAL_PIXEL_VIEW_GET(tag::writer, rgb_pixel, rgb_vector)
 SIMPLE_GRAPHICAL_PIXEL_VIEW_GET(tag::writer, rgb_pixel, rgba_vector)
 SIMPLE_GRAPHICAL_PIXEL_VIEW_GET(tag::writer, rgba_pixel, rgb_vector)
 SIMPLE_GRAPHICAL_PIXEL_VIEW_GET(tag::writer, rgba_pixel, rgba_vector)
+SIMPLE_GRAPHICAL_PIXEL_VIEW_GET(tag::writer, uint16_t, float)
+SIMPLE_GRAPHICAL_PIXEL_VIEW_GET(tag::writer, pixel_byte, float)
 #undef SIMPLE_GRAPHICAL_PIXEL_VIEW_GET
 
 } // namespace simple::graphical
