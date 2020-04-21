@@ -4,7 +4,7 @@
 #include <string>
 
 #include "simple/graphical/surface.h"
-#include "simple/graphical/algorithm.hpp"
+#include "simple/graphical/algorithm/fill.h"
 
 #if ENABLE_OPENGL_EXAMPLES
 #include <GL/glew.h>

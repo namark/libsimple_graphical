@@ -7,7 +7,7 @@
 
 #include "simple/graphical/initializer.h"
 #include "simple/graphical/software_window.h"
-#include "simple/graphical/algorithm.hpp"
+#include "simple/graphical/algorithm/blit.h"
 
 #include "external/file.hpp"
 #include "external/picopng.h"

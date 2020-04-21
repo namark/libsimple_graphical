@@ -6,7 +6,7 @@
 #include "simple/graphical/renderer.h"
 #include "simple/graphical/texture.h"
 #include "simple/graphical/surface.h"
-#include "simple/graphical/algorithm.hpp"
+#include "simple/graphical/algorithm/fill.h"
 
 using namespace simple::graphical;
 using namespace color_literals;
