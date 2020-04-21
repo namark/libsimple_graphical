@@ -281,7 +281,7 @@ int main(int argc, char** argv) try
 			break;
 
 			case commands::commit:
-				blit(inverted_image, image);
+				blit(inverted_image, image, blend_mode::none);
 			break;
 
 			case commands::reset:

@@ -54,19 +54,10 @@ int main() try
 	win.update();
 	std::this_thread::sleep_for(1s);
 
-	// not lets copy everything to the bottom right corner in place
+	// now lets copy everything to the bottom right corner in place
 	// for an interesting effect
-	// TODO: blit algorithms for pixel views with pixel type conversion and scaling
 	const auto bottom_right = pixel_writer(all_pixels,box + 200);
-	auto from = int2::zero();
-	auto to = all_pixels.size();
-	auto i = from;
-	auto dimension = i.begin();
-	while(dimension != i.end())
-	{
-		bottom_right.set(all_pixels.get(i), i/2);
-		dimension = simple::support::advance_vector(i.begin(), i.end(), from.begin(), to.begin());
-	}
+	blit(all_pixels_const, bottom_right);
 
 	blit(playground, win.surface());
 	win.update();
