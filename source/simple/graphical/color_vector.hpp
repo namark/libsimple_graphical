@@ -8,7 +8,22 @@
 namespace simple::graphical
 {
 
-	template<typename Type, size_t Size, typename RGBA_Order = std::make_index_sequence<Size>,
+	// TODO: this is to customize for YUV so this really needs to return a vector not just a number
+	// better to support both probably
+	template <typename T>
+	class default_color_limits
+	{
+		public:
+		constexpr static auto get()
+		{
+			if constexpr(std::is_floating_point_v<T>)
+				return support::range<T>{static_cast<T>(0), static_cast<T>(1)};
+			else
+				return support::range<T>::limit();
+		}
+	};
+
+	template<typename Type, size_t Size, typename RGBA_Order = std::make_index_sequence<Size>, typename Limits = default_color_limits<Type>,
 	std::enable_if_t<Size == 3 || Size == 4>* = nullptr>
 	struct color_vector : public geom::vector<Type, Size, RGBA_Order>
 	{
@@ -16,10 +31,7 @@ namespace simple::graphical
 		using int_type = uint32_t;
 		constexpr static auto value_limits()
 		{
-			if constexpr(std::is_floating_point_v<Type>)
-				return support::range<Type>{static_cast<Type>(0), static_cast<Type>(1)};
-			else
-				return support::range<Type>::limit();
+			return Limits::get();
 		}
 
 		using base::base;
