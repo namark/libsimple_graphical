@@ -139,7 +139,7 @@ auto picopng_load_image(const char* filename)
 	auto png = simple::file::dump( simple::file::bropex(filename) );
 
 	std::vector<surface::byte> image_data;
-	simple::geom::vector<unsigned long> image_size;
+	simple::geom::vector<unsigned long,2> image_size;
 	int picopng_result = decodePNG(
 			image_data, image_size.x(), image_size.y(),
 			reinterpret_cast<unsigned char*>(png.data()), png.size());
