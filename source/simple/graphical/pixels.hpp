@@ -10,6 +10,10 @@
 #include "simple/geom/algorithm.hpp"
 #include "color.h"
 
+// TODO: LERP: there is so much lerp here, but no lerp function to rule them all
+// meanwhile, by going against popular vote we have now a better name for lerp:
+// way (and it's evil twin - wayback), available under simple::support
+
 namespace simple::graphical
 {
 
@@ -30,6 +34,7 @@ namespace simple::graphical
 			float2 mask = float2(i);
 			// and doesn't have to be linear either,
 			// with another customization point here maybe?
+			// LERP: whata lerpaderp is this? lerpception
 			auto ratio = table * mask +
 				(float2::one() - table)*(float2::one() - mask);
 			auto magnitude = std::accumulate(
@@ -130,6 +135,7 @@ namespace simple::graphical
 			auto sample = ColorVector{};
 			quantize(spread, position, [&](auto position, auto area)
 			{
+				// LERP: weighted sum is a generalization of lerp
 				sample += static_cast<ColorVector>(get(int2(position))) * area;
 			});
 
@@ -236,6 +242,7 @@ namespace simple::graphical
 			assert(opacity >= 0.f && opacity <= 1.f);
 			ColorVector old_color {this->get(int2(position))};
 			// TODO: consider skipping setting pixels with opacity 0(or near 0)
+			// LERP: finally just a simple lerp
 			set(Pixel(pixel * opacity + old_color * (1 - opacity)), int2(position));
 		});
 	}
