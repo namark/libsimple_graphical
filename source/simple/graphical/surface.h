@@ -51,6 +51,7 @@ namespace simple::graphical
 		rgb_pixel color() const noexcept;
 		void color(rgb_pixel new_value) const noexcept;
 
+		// TODO: generic interface wrappers, implicitly visiting, like simple::motion::variant
 		pixel_writer_variant pixels() const noexcept;
 
 		void save(const char* filename) const;
