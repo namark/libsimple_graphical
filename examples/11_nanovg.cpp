@@ -86,6 +86,8 @@ int main(int argc, char const* argv[]) try
 		}
 	}
 
+	nvgDeleteGL2(vg);
+
 	return 0;
 }
 catch(...)
