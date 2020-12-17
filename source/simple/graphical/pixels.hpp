@@ -124,7 +124,7 @@ namespace simple::graphical
 			return get<ColorVector>(position,
 			{
 				int2(position < float2::zero()),
-				int2::one(2) - int2(position > (size - 1))
+				int2::one(2) - int2(position >= (size - 1))
 			});
 		}
 
@@ -226,7 +226,7 @@ namespace simple::graphical
 		set<ColorVector>(pixel, position,
 		{
 			int2(position < float2::zero()),
-			int2::one(2) - int2(position > (size - 1))
+			int2::one(2) - int2(position >= (size - 1))
 		});
 	}
 
