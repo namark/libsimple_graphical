@@ -52,7 +52,7 @@ int main(int argc, char const* argv[]) try
 		surface image(
 				picopng_image->first.data(),
 				picopng_image->second,
-				pixel_format(pixel_format::type::rgba8888));
+				pixel_format(pixel_format::type::rgba32));
 		show_image(image);
 
 		// or copy the data.
@@ -62,7 +62,7 @@ int main(int argc, char const* argv[]) try
 		surface picopng_image_copy (
 				std::move(image_data_copy),
 				picopng_image->second,
-				pixel_format(pixel_format::type::rgba8888));
+				pixel_format(pixel_format::type::rgba32));
 		show_image(picopng_image_copy);
 
 	}
@@ -129,7 +129,7 @@ surface stb_load_surface(const char* filename)
 	{
 		{ data, [](surface::byte* data) { stbi_image_free(data); } },
 		size,
-		pixel_format(pixel_format::type::rgba8888)
+		pixel_format(pixel_format::type::rgba32)
 	};
 }
 
