@@ -150,7 +150,7 @@ void xiaolin_wu_line(line<int2> line, rgb_pixels pixels, rgb_pixel value)
 	bresenham_line(line, [&pixels, &value](int2 position, rational ratio)
 	{
 		const auto blended = value.mutant_clone([&ratio](auto color)
-			{ return rgb_pixel::coordinate_type((int)color * ratio); });
+			{ return rgb_pixel::coordinate_type(int(color * ratio)); });
 		pixels.set(rgb_pixel{blended}, position);
 	});
 }
