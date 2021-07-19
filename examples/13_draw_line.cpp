@@ -38,7 +38,9 @@ int main(int argc, char const* argv[]) try
 
 	software_window win("Line drawing", int2::one(400), window::flags::borderless);
 
-	const unsigned zoom = argc > 1 ? simple::support::ston<unsigned>(argv[1]) : 1;
+	const int zoom = argc > 1 ? simple::support::ston<int>(argv[1]) : 1;
+	if(zoom <= 0)
+		throw std::logic_error("zoom is not positive!");
 
 	const auto logical_size = win.surface().size() / zoom;
 	surface canvas (logical_size, pixel_format(pixel_format::type::rgb24));

@@ -56,8 +56,8 @@ namespace simple::graphical
 
 		};
 
-		constexpr static const int2 undefined_position = int2::one() * SDL_WINDOWPOS_UNDEFINED;
-		constexpr static const int2 center_position = int2::one() * SDL_WINDOWPOS_CENTERED;
+		constexpr static const int2 undefined_position = int2::one() * int(SDL_WINDOWPOS_UNDEFINED);
+		constexpr static const int2 center_position = int2::one() * int(SDL_WINDOWPOS_CENTERED);
 
 		int2 size() const noexcept;
 		void size(int2 value) const noexcept;

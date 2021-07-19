@@ -215,7 +215,7 @@ namespace simple
 	public support::define_array_operators<geom::vector<C,D,O>>
 	{
 		// revert these to default beahvior, in this context means no type promotion
-		template <typename, support::array_operator, typename>
+		template <typename, support::array_operator, typename, bool>
 		using result = graphical::color_vector<C,D,O>;
 		using compatibility_tag = graphical::color_vector<C,D,O>;
 	};

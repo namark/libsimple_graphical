@@ -34,7 +34,10 @@ struct floating_pixel
 
 int main(int argc, char const* argv[]) try
 {
-	const unsigned zoom = argc > 1 ? simple::support::ston<unsigned>(argv[1]) : 16;
+	const int zoom = argc > 1 ? simple::support::ston<int>(argv[1]) : 16;
+	if(zoom <= 0)
+		throw std::logic_error("zoom is not positive!");
+
 	const unsigned waypoint_count = argc > 2 ? simple::support::ston<unsigned>(argv[2]) : 5;
 	const float fastity = argc > 3 ? simple::support::ston<float>(argv[3]) : 0.1;
 	const unsigned pixel_count = argc > 4 ? simple::support::ston<unsigned>(argv[4]) : 10000;
